@@ -41,13 +41,7 @@ df3 = pd.read_csv("data/dataset3.csv", na_values="NA", skiprows=1, sep=" ")
 with pm.Model() as model:
 
     # Assign priors to the ANPP regression parameters (covariate effects)
-    a0 = pm.Normal('a0', mu=0, sd=0.0000001)
-    a1 = pm.Normal('a1', mu=0, sd=0.0000001)
-    a2 = pm.Normal('a2', mu=0, sd=0.0000001)
-    a3 = pm.Normal('a3', mu=0, sd=0.0000001)
-    a4 = pm.Normal('a4', mu=0, sd=0.0000001)
-    a5 = pm.Normal('a5', mu=0, sd=0.0000001)
-
+    a = pm.Normal('a', mu=0, sd=0.0000001, shape=6)
 
     # Prior for residual (observation) standard deviation, and compute
     # associated precision
@@ -55,17 +49,6 @@ with pm.Model() as model:
     tau = pow(sig, -2)
 
     # Priors for parameters in the Event missing data model:
-    mu_ev0 = pm.Uniform('mu_ev0', 0, 500)
-    mu_ev1 = pm.Uniform('mu_ev1', 0, 500)
-    mu_ev2 = pm.Uniform('mu_ev2', 0, 500)
-    mu_ev3 = pm.Uniform('mu_ev3', 0, 500)
-
-    sig_ev0 = pm.Uniform('sig_ev0', 0, 500)
-    sig_ev1 = pm.Uniform('sig_ev1', 0, 500)
-    sig_ev2 = pm.Uniform('sig_ev2', 0, 500)
-    sig_ev3 = pm.Uniform('sig_ev3', 0, 500)
-
-    tau_ev0 = pow(sig_ev0, -2)
-    tau_ev1 = pow(sig_ev1, -2)
-    tau_ev2 = pow(sig_ev2, -2)
-    tau_ev3 = pow(sig_ev3, -2)
+    mu_ev = pm.Uniform('mu_ev', 0, 500, shape=4)
+    sig_ev = pm.Uniform('sig_ev', 0, 500, shape=4)
+    tau_ev = pow(sig_ev, -2)
