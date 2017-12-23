@@ -35,6 +35,8 @@ block = np.array([1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17,\
                   38, 38]).reshape(5,12)
 
 
+df2 = pd.read_csv("data/dataset2.csv", na_values="NA", skiprows=1, sep=" ")
+df3 = pd.read_csv("data/dataset3.csv", na_values="NA", skiprows=1, sep=" ")
 
-
+print(df3)
 #with pm.Model() as model:

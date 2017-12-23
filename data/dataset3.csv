@@ -1,3 +1,4 @@
+# Monthly precipitation data; data were obtained for Fort Collins, Colorado, which is located about 56 miles southwest of the CPER site. Fort Collins' monthly precipitation totals (mm) for 1893-2009 were downloaded from the Western Regional Climate Center. Ideally, we would want to use monthly precipitation from the study site (CPER), but this site did not provide complete monthly records for multiple years prior to the onset of the ANPP measurements.
 Year ppt1 ppt2 ppt3 ppt4 ppt5 ppt6 ppt7 ppt8 ppt9 ppt10 ppt11 ppt12
 1900 0.25 1.12 1.07 10.56 1.75 0.82 1.14 0.16 1.92 0.15 0.07 0.11
 1901 0.19 0.38 1.88 3.62 7.47 2.35 0.71 0.72 2.1 0.36 0.02 1.37
