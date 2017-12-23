@@ -40,6 +40,11 @@ df3 = pd.read_csv("data/dataset3.csv", na_values="NA", skiprows=1, sep=" ")
 
 with pm.Model() as model:
 
+    # Prior for residual (observation) standard deviation, and compute
+    # associated precision
+    sig = pm.Uniform('sig', 0, 100)
+    tau = pow(sig, -2)
+
     # Priors for parameters in the Event missing data model:
     mu_ev0 = pm.Uniform('mu_ev0', 0, 500)
     mu_ev1 = pm.Uniform('mu_ev1', 0, 500)
