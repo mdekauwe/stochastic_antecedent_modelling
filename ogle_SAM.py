@@ -40,6 +40,15 @@ df3 = pd.read_csv("data/dataset3.csv", na_values="NA", skiprows=1, sep=" ")
 
 with pm.Model() as model:
 
+    # Assign priors to the ANPP regression parameters (covariate effects)
+    a0 = pm.Normal('a0', mu=0, sd=0.0000001)
+    a1 = pm.Normal('a1', mu=0, sd=0.0000001)
+    a2 = pm.Normal('a2', mu=0, sd=0.0000001)
+    a3 = pm.Normal('a3', mu=0, sd=0.0000001)
+    a4 = pm.Normal('a4', mu=0, sd=0.0000001)
+    a5 = pm.Normal('a5', mu=0, sd=0.0000001)
+
+
     # Prior for residual (observation) standard deviation, and compute
     # associated precision
     sig = pm.Uniform('sig', 0, 100)
