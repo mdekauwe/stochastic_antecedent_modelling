@@ -38,5 +38,20 @@ block = np.array([1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17,\
 df2 = pd.read_csv("data/dataset2.csv", na_values="NA", skiprows=1, sep=" ")
 df3 = pd.read_csv("data/dataset3.csv", na_values="NA", skiprows=1, sep=" ")
 
-print(df3)
-#with pm.Model() as model:
+with pm.Model() as model:
+
+    # Priors for parameters in the Event missing data model:
+    mu_ev0 = pm.Uniform('mu_ev0', 0, 500)
+    mu_ev1 = pm.Uniform('mu_ev1', 0, 500)
+    mu_ev2 = pm.Uniform('mu_ev2', 0, 500)
+    mu_ev3 = pm.Uniform('mu_ev3', 0, 500)
+
+    sig_ev0 = pm.Uniform('sig_ev0', 0, 500)
+    sig_ev1 = pm.Uniform('sig_ev1', 0, 500)
+    sig_ev2 = pm.Uniform('sig_ev2', 0, 500)
+    sig_ev3 = pm.Uniform('sig_ev3', 0, 500)
+
+    tau_ev0 = pow(sig_ev0, -2)
+    tau_ev1 = pow(sig_ev1, -2)
+    tau_ev2 = pow(sig_ev2, -2)
+    tau_ev3 = pow(sig_ev3, -2)
