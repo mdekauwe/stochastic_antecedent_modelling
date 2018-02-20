@@ -79,3 +79,31 @@ with pm.Model() as model:
     # to assign the dirichlet prior. For each time block into the past, assign
     # the unnormalized weight (deltaX) a gamma(1,1) prior:
     deltaX = pm.Gamma('deltaX', 1, 1, shape=Nblocks)
+
+    for t in range(Nlag):
+
+        # Compute the yearly weights:
+        yr_w[t] = sum(weight[,t])
+        alphad[t] = 1
+
+        for m in range(12):
+
+            # Redefine the unnormalized monthly weights to account for
+            # post-ANPP # harvest period; i.e., 2nd part involving equals and
+            # step functions # sets weight = 0 if in year 1 and in Oct, Nov,
+            # or Dec (i.e., post- # ANPP harvest).
+            delta[m,t] = (deltaX[block[t,m]]) * \
+                            (1 - equals(t,1) * step(m - 9.5))
+
+            # Compute normalized monthly weights, which will be between
+            # 0 and 1, and will some to one.
+            weight[m,t] = delta[m,t] / sumD
+
+            # Reorder the weights to go from most recent month (Dec of current
+            # year) to “oldest” month (Jan at past year = Nlag).
+            weightOrdered[(t-1)*12 + (12-m+1)] = weight[m,t]
+
+            # For each time into the past, compute the weighted precipitation
+            # variable.
+            for i in range(Nlag, Nyrs+1):
+                antX1[i,m,t] = weight[m,t] * ppt[i-t+1,m]
