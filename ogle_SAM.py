@@ -73,6 +73,9 @@ with pm.Model() as model:
         # Data model (or likelihood) for the observed NPP data:
         NPP[i] = pm.Normal('NPP', mu=mu[i]], tau=tau)
 
+        # Generate “replicated data” to evaluate model fit.
+        NPP_rep[i] pm.Normal('NPP_rep', mu=mu[i]], tau=tau)
+
     # Dirichlet prior for monthly precipitation weights (due to restrictions
     # on when the built-in dirichlet distribution can be used, we are required
     # to use the relationship between the gamma distribution and the dirichlet
