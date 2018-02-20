@@ -52,7 +52,7 @@ with pm.Model() as model:
     # Priors for parameters in the Event missing data model:
     mu_ev = pm.Uniform('mu_ev', 0, 500, shape=4)
     sig_ev = pm.Uniform('sig_ev', 0, 500, shape=4)
-    tau_ev = pow(sig_ev, -2, shape=4))
+    tau_ev = pow(sig_ev, -2, shape=4)
 
     # Dirichlet prior for monthly precipitation weights (due to restrictions
     # on when the built-in dirichlet distribution can be used, we are required
