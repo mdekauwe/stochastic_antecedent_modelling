@@ -54,13 +54,6 @@ with pm.Model() as model:
     sig_ev = pm.Uniform('sig_ev', 0, 500, shape=4)
     tau_ev = pow(sig_ev, -2, shape=4)
 
-    # Dirichlet prior for monthly precipitation weights (due to restrictions
-    # on when the built-in dirichlet distribution can be used, we are required
-    # to use the relationship between the gamma distribution and the dirichlet
-    # to assign the dirichlet prior. For each time block into the past, assign
-    # the unnormalized weight (deltaX) a gamma(1,1) prior:
-    deltaX = pm.Gamma('deltaX', 1, 1, shape=Nblocks)
-
     for i in range(N):
 
         # Some of the precipitation event data are missing, so specify a simple
@@ -79,3 +72,10 @@ with pm.Model() as model:
 
         # Data model (or likelihood) for the observed NPP data:
         NPP[i] = pm.Normal('NPP', mu=mu[i]], tau=tau)
+
+    # Dirichlet prior for monthly precipitation weights (due to restrictions
+    # on when the built-in dirichlet distribution can be used, we are required
+    # to use the relationship between the gamma distribution and the dirichlet
+    # to assign the dirichlet prior. For each time block into the past, assign
+    # the unnormalized weight (deltaX) a gamma(1,1) prior:
+    deltaX = pm.Gamma('deltaX', 1, 1, shape=Nblocks)
