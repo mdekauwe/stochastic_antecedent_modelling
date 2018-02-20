@@ -54,12 +54,12 @@ with pm.Model() as model:
     sig_ev = pm.Uniform('sig_ev', 0, 500, shape=4)
     tau_ev = pow(sig_ev, -2, shape=4)
 
-    for i in range(N):
+    # Some of the precipitation event data are missing, so specify a simple
+    # data model for the Event data for the purpose of estimating the
+    # missing data:
+    Event = pm.Normal('Event', mu=mu_ev, tau=tau_ev, shape=4)
 
-        # Some of the precipitation event data are missing, so specify a simple
-        # data model for the Event data for the purpose of estimating the
-        # missing data:
-        Event = pm.Normal('Event', mu=mu_ev, tau=tau_ev, shape=4)
+    for i in range(N):
 
         # Define model for latent (mean) NPP; Event[,k] represents the amount
         # of precipitation received in different size classes, where k indexes
