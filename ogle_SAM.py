@@ -21,7 +21,8 @@ __version__ = "1.0 (23.12.2017)"
 __email__   = "mdekauwe@gmail.com"
 
 N = 52
-# Number of past years, including the current year for which the antecedent conditions are computed
+# Number of past years, including the current year for which the antecedent
+# conditions are computed
 Nlag = 5
 Nyrs = 91
 Nblocks = 38
@@ -51,7 +52,7 @@ with pm.Model() as model:
     # Priors for parameters in the Event missing data model:
     mu_ev = pm.Uniform('mu_ev', 0, 500, shape=4)
     sig_ev = pm.Uniform('sig_ev', 0, 500, shape=4)
-    tau_ev = pow(sig_ev, -2)
+    tau_ev = pow(sig_ev, -2, shape=4))
 
     # Dirichlet prior for monthly precipitation weights (due to restrictions
     # on when the built-in dirichlet distribution can be used, we are required
