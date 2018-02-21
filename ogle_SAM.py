@@ -105,7 +105,7 @@ with pm.Model() as model:
 
             # Reorder the weights to go from most recent month (Dec of current
             # year) to “oldest” month (Jan at past year = Nlag).
-            weightOrdered[(t-1)*12 + (12-m+1)] = weight[m,t]
+            weightOrdered[t*12 + (12-m+1)] = weight[m,t]
 
             # For each time into the past, compute the weighted precipitation
             # variable.
