@@ -15,6 +15,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 import pandas as pd
 import sys
+import theano.tensor as tt
 
 __author__  = "Martin De Kauwe"
 __version__ = "1.0 (23.12.2017)"
@@ -47,12 +48,12 @@ with pm.Model() as model:
     # Prior for residual (observation) standard deviation, and compute
     # associated precision
     sig = pm.Uniform('sig', 0, 100)
-    tau = pow(sig, -2)
+    tau = tt.pow(sig, -2)
 
     # Priors for parameters in the Event missing data model:
     mu_ev = pm.Uniform('mu_ev', 0, 500, shape=4)
     sig_ev = pm.Uniform('sig_ev', 0, 500, shape=4)
-    tau_ev = pow(sig_ev, -2, shape=4)
+    tau_ev = tt.pow(sig_ev, -2, shape=4)
 
     # Some of the precipitation event data are missing, so specify a simple
     # data model for the Event data for the purpose of estimating the
