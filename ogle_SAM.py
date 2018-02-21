@@ -111,3 +111,5 @@ with pm.Model() as model:
             # variable.
             for i in range(Nlag, Nyrs+1):
                 antX1[i,m,t] = weight[m,t] * df3.ppt[i-t+1,m]
+
+pm.traceplot(traces)
