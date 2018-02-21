@@ -50,6 +50,11 @@ df2 = pd.read_csv("data/dataset2.csv", na_values="NA", skiprows=1, sep=" ")
 # ANPP measurements.
 df3 = pd.read_csv("data/dataset3.csv", na_values="NA", skiprows=1, sep=" ")
 
+# https://github.com/takluyver/pymc/blob/master/pymc/sandbox/parse_winbugs.py
+step = lambda x: x>0
+
+delta = np.zeros((12,Nlag))
+
 with pm.Model() as model:
 
     # Assign priors to the ANPP regression parameters (covariate effects)
@@ -69,19 +74,15 @@ with pm.Model() as model:
     # data model for the Event data for the purpose of estimating the
     # missing data:
     Event = pm.Normal('Event', mu=mu_ev, tau=tau_ev, shape=4)
-    
+
     # Dirichlet prior for monthly precipitation weights (due to restrictions
     # on when the built-in dirichlet distribution can be used, we are required
     # to use the relationship between the gamma distribution and the dirichlet
     # to assign the dirichlet prior. For each time block into the past, assign
     # the unnormalized weight (deltaX) a gamma(1,1) prior:
     deltaX = pm.Gamma('deltaX', 1, 1, shape=Nblocks)
-    
-    for t in range(Nlag):
 
-        # Compute the yearly weights:
-        yr_w[t] = sum(weight[:,t])
-        alphad[t] = 1
+    for t in range(Nlag):
 
         for m in range(12):
 
@@ -90,7 +91,7 @@ with pm.Model() as model:
             # step functions # sets weight = 0 if in year 1 and in Oct, Nov,
             # or Dec (i.e., post- # ANPP harvest).
             delta[m,t] = (deltaX[block[t,m]]) * \
-                            (1 - equals(t,1) * step(m - 9.5))
+                            (1 - np.equal(t,1) * step(m - 9.5))
 
             # Compute normalized monthly weights, which will be between
             # 0 and 1, and will some to one.
@@ -104,6 +105,10 @@ with pm.Model() as model:
             # variable.
             for i in range(Nlag, Nyrs+1):
                 antX1[i,m,t] = weight[m,t] * df3.ppt[i-t+1,m]
+
+        # Compute the yearly weights:
+        yr_w[t] = sum(weight[:,t])
+        alphad[t] = 1
 
     # Compute sum of deltas (unnormalized weights), to be used to compute
     # the normalized antecedent weights:
@@ -145,9 +150,9 @@ with pm.Model() as model:
         # Generate “replicated data” to evaluate model fit.
         NPP_rep[i] = pm.Normal('NPP_rep', mu=mu[i], tau=tau)
 
-    
 
-    
+
+
 
 
 
