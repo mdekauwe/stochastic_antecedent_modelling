@@ -110,4 +110,4 @@ with pm.Model() as model:
             # For each time into the past, compute the weighted precipitation
             # variable.
             for i in range(Nlag, Nyrs+1):
-                antX1[i,m,t] = weight[m,t] * ppt[i-t+1,m]
+                antX1[i,m,t] = weight[m,t] * df3.ppt[i-t+1,m]
