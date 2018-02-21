@@ -18,15 +18,16 @@ import sys
 import theano.tensor as tt
 
 __author__  = "Martin De Kauwe"
-__version__ = "1.0 (23.12.2017)"
+__version__ = "1.0 (21.02.2018)"
 __email__   = "mdekauwe@gmail.com"
 
 N = 52
+Nyrs = 91
+Nblocks = 38
+
 # Number of past years, including the current year for which the antecedent
 # conditions are computed
 Nlag = 5
-Nyrs = 91
-Nblocks = 38
 
 # the time block that each month is assigned to such that for 60 different
 # months, we are only estimating 38 unique monthly weights
@@ -41,13 +42,13 @@ block = np.array([1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17,\
 # and Sala (1992).
 df2 = pd.read_csv("data/dataset2.csv", na_values="NA", skiprows=1, sep=" ")
 
-# Monthly precipitation data; data were obtained for Fort Collins, Colorado,
-# which is located about 56 miles southwest of the CPER site. Fort Collins'
-# monthly precipitation totals (mm) for 1893-2009 were downloaded from the
-# Western Regional Climate Center. Ideally, we would want to use monthly
-# precipitation from the study site (CPER), but this site did not provide
-# complete monthly records for multiple years prior to the onset of the
-# ANPP measurements.
+# Monthly precipitation data
+# - data were obtained for Fort Collins, Colorado, which is located about
+# 56 miles southwest of the CPER site. Fort Collins' monthly precipitation
+# totals (mm) for 1893-2009 were downloaded from the Western Regional Climate
+# Center. Ideally, we would want to use monthly precipitation from the study
+# site (CPER), but this site did not provide complete monthly records for
+# multiple years prior to the onset of the ANPP measurements.
 df3 = pd.read_csv("data/dataset3.csv", na_values="NA", skiprows=1, sep=" ")
 
 # https://github.com/takluyver/pymc/blob/master/pymc/sandbox/parse_winbugs.py
@@ -56,6 +57,7 @@ step = lambda x: x>0
 delta = np.zeros((12,Nlag))
 
 with pm.Model() as model:
+
     # Assign priors to the ANPP regression parameters (covariate effects)
     a = pm.Normal('a', mu=0, sd=1E-07, shape=6)
 
@@ -89,8 +91,8 @@ with pm.Model() as model:
             # or Dec (i.e., post- # ANPP harvest).
             delta[m,t] = (deltaX[block[t,m]]) * \
                             (1 - np.equal(t,1).astype(int) * \
-                            step(m - 9.5).astype(int))
-
+                            (step(m - 9.5)*1)) #the x1 is just to make it an int
+            
             # Compute normalized monthly weights, which will be between
             # 0 and 1, and will some to one.
             weight[m,t] = delta[m,t] / sumD
