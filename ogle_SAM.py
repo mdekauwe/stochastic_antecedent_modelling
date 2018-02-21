@@ -73,7 +73,7 @@ with pm.Model() as model:
     # Compute sum of deltas (unnormalized weights), to be used to compute
     # the normalized antecedent weights:
     for t in range(Nlag):
-        sumD1[t] = sum(delta[,t])
+        sumD1[t] = sum(delta[:,t])
 
     sumD = sum(sumD1)
 
@@ -85,13 +85,13 @@ with pm.Model() as model:
     # text); that is, these weights sum to 1 within each past year
     for m in range(12):
         for t in range(Nlag):
-            alpha[m,t] = delta[m,t] / sum(delta[,t])
+            alpha[m,t] = delta[m,t] / sum(delta[:,t])
 
     # Compute antecedent precipitation by summing the weighted precipitation
     # variable over months and past years:
     for i in range(Nlag, Nyrs+1):
         for t in range(Nlag):
-            ant_sum1[i,t] = sum(antX1[i,,t])
+            ant_sum1[i,t] = sum(antX1[i,:,t])
         antX[i] = sum(ant_sum1[i,])
 
     for i in range(N):
@@ -106,10 +106,10 @@ with pm.Model() as model:
                 (a[4] * df2.Event[i,2]) + (a[5] * df2.Event[i,3])
 
         # Data model (or likelihood) for the observed NPP data:
-        NPP[i] = pm.Normal('NPP', mu=mu[i]], tau=tau)
+        NPP[i] = pm.Normal('NPP', mu=mu[i], tau=tau)
 
         # Generate “replicated data” to evaluate model fit.
-        NPP_rep[i] pm.Normal('NPP_rep', mu=mu[i], tau=tau)
+        NPP_rep[i] = pm.Normal('NPP_rep', mu=mu[i], tau=tau)
 
     # Dirichlet prior for monthly precipitation weights (due to restrictions
     # on when the built-in dirichlet distribution can be used, we are required
