@@ -112,4 +112,31 @@ with pm.Model() as model:
             for i in range(Nlag, Nyrs+1):
                 antX1[i,m,t] = weight[m,t] * df3.ppt[i-t+1,m]
 
+    # Compute sum of deltas (unnormalized weights), to be used to compute
+    # the normalized antecedent weights:
+    for t in range(Nlag):
+        sumD1[t] = sum(delta[,t])
+
+    sumD = sum(sumD1)
+
+    # Compute the cumulative monthly weights:
+    for t in range(Nlag*12):
+        cum_weight[t] = sum(weightOrdered[0:t])
+
+    # Compute the month within year weights (alpha’s = wP,m in Box 1 in main
+    # text); that is, these weights sum to 1 within each past year
+    for m in range(12):
+        for t in range(Nlag):
+            alpha[m,t] = delta[m,t] / sum(delta[,t])
+
+    # Compute antecedent precipitation by summing the weighted precipitation
+    # variable over months and past years:
+    for i in range(Nlag, Nyrs+1):
+        for t in range(Nlag):
+            ant_sum1[i,t] = sum(antX1[i,,t])
+        antX[i] = sum(ant_sum1[i,])
+   
+
+
+
 pm.traceplot(traces)
