@@ -56,7 +56,6 @@ step = lambda x: x>0
 delta = np.zeros((12,Nlag))
 
 with pm.Model() as model:
-
     # Assign priors to the ANPP regression parameters (covariate effects)
     a = pm.Normal('a', mu=0, sd=1E-07, shape=6)
 
@@ -83,9 +82,7 @@ with pm.Model() as model:
     deltaX = pm.Gamma('deltaX', 1, 1, shape=Nblocks)
 
     for t in range(Nlag):
-
         for m in range(12):
-
             # Redefine the unnormalized monthly weights to account for
             # post-ANPP # harvest period; i.e., 2nd part involving equals and
             # step functions # sets weight = 0 if in year 1 and in Oct, Nov,
@@ -134,7 +131,6 @@ with pm.Model() as model:
         antX[i] = sum(ant_sum1[i,:])
 
     for i in range(N):
-
         # Define model for latent (mean) NPP; Event[,k] represents the amount
         # of precipitation received in different size classes, where k indexes
         # the even size class (k=1 for < 5 mm; k=2 for 5-15 mm; k=3 for 15-
@@ -149,12 +145,6 @@ with pm.Model() as model:
 
         # Generate “replicated data” to evaluate model fit.
         NPP_rep[i] = pm.Normal('NPP_rep', mu=mu[i], tau=tau)
-
-
-
-
-
-
 
 
 pm.traceplot(traces)
