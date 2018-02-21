@@ -50,6 +50,11 @@ df2 = pd.read_csv("data/dataset2.csv", na_values="NA", skiprows=1, sep=" ")
 # ANPP measurements.
 df3 = pd.read_csv("data/dataset3.csv", na_values="NA", skiprows=1, sep=" ")
 
+# https://github.com/takluyver/pymc/blob/master/pymc/sandbox/parse_winbugs.py
+step = lambda x: x>0
+
+delta = np.zeros((12,Nlag))
+
 with pm.Model() as model:
 
     # Assign priors to the ANPP regression parameters (covariate effects)
