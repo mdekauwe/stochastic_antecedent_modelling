@@ -89,10 +89,16 @@ with pm.Model() as model:
             # post-ANPP # harvest period; i.e., 2nd part involving equals and
             # step functions # sets weight = 0 if in year 1 and in Oct, Nov,
             # or Dec (i.e., post- # ANPP harvest).
+
+            print(deltaX[block[t,m]])
+            print( 1 - np.equal(t,1).astype(int) )
+            print( (step(m - 9.5)*1) )
+            print( (1 - np.equal(t,1).astype(int) * (step(m - 9.5)*1)) )
+
             delta[m,t] = (deltaX[block[t,m]]) * \
                             (1 - np.equal(t,1).astype(int) * \
                             (step(m - 9.5)*1)) #the x1 is just to make it an int
-            
+
             # Compute normalized monthly weights, which will be between
             # 0 and 1, and will some to one.
             weight[m,t] = delta[m,t] / sumD
