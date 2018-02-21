@@ -37,7 +37,17 @@ block = np.array([1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17,\
                   38, 38]).reshape(5,12)
 
 
+# ANPP and precipitation event data for each year, extracted from Lauenroth
+# and Sala (1992).
 df2 = pd.read_csv("data/dataset2.csv", na_values="NA", skiprows=1, sep=" ")
+
+# Monthly precipitation data; data were obtained for Fort Collins, Colorado,
+# which is located about 56 miles southwest of the CPER site. Fort Collins'
+# monthly precipitation totals (mm) for 1893-2009 were downloaded from the
+# Western Regional Climate Center. Ideally, we would want to use monthly
+# precipitation from the study site (CPER), but this site did not provide
+# complete monthly records for multiple years prior to the onset of the
+# ANPP measurements.
 df3 = pd.read_csv("data/dataset3.csv", na_values="NA", skiprows=1, sep=" ")
 
 with pm.Model() as model:
