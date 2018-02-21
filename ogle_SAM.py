@@ -63,7 +63,7 @@ with pm.Model() as model:
     # Priors for parameters in the Event missing data model:
     mu_ev = pm.Uniform('mu_ev', 0, 500, shape=4)
     sig_ev = pm.Uniform('sig_ev', 0, 500, shape=4)
-    tau_ev = tt.pow(sig_ev, -2, shape=4)
+    tau_ev = tt.pow(sig_ev, -2)
 
     # Some of the precipitation event data are missing, so specify a simple
     # data model for the Event data for the purpose of estimating the
