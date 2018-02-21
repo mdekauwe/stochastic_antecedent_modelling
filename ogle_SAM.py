@@ -21,6 +21,7 @@ __author__  = "Martin De Kauwe"
 __version__ = "1.0 (21.02.2018)"
 __email__   = "mdekauwe@gmail.com"
 
+INCH_TO_MM = 25.4
 N = 52
 Nyrs = 91
 Nblocks = 38
@@ -145,7 +146,7 @@ with pm.Model() as model:
         # the even size class (k=1 for < 5 mm; k=2 for 5-15 mm; k=3 for 15-
         # 30 mm; k=4 for >30 mm); convert antecedent precipitation (antX) from
         # inches to mm.
-        mu[i] = ( a[0] + (a[1] * antX[df2.YearID[i]] * 25.4) +
+        mu[i] = ( a[0] + (a[1] * antX[df2.YearID[i]] * INCH_TO_MM) +
                  (a[2] * df2.Event[i,0]) + (a[3] * df2.Event[i,1]) +
                  (a[4] * df2.Event[i,2]) + (a[5] * df2.Event[i,3]) )
 
