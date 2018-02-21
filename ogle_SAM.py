@@ -92,7 +92,7 @@ with pm.Model() as model:
     for i in range(Nlag, Nyrs+1):
         for t in range(Nlag):
             ant_sum1[i,t] = sum(antX1[i,:,t])
-        antX[i] = sum(ant_sum1[i,])
+        antX[i] = sum(ant_sum1[i,:])
 
     for i in range(N):
 
@@ -121,7 +121,7 @@ with pm.Model() as model:
     for t in range(Nlag):
 
         # Compute the yearly weights:
-        yr_w[t] = sum(weight[,t])
+        yr_w[t] = sum(weight[:,t])
         alphad[t] = 1
 
         for m in range(12):
