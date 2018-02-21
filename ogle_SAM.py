@@ -88,7 +88,7 @@ with pm.Model() as model:
             # step functions # sets weight = 0 if in year 1 and in Oct, Nov,
             # or Dec (i.e., post- # ANPP harvest).
             delta[m,t] = (deltaX[block[t,m]]) * \
-                            (1 - np.equal(t,1) * step(m - 9.5))
+                            (1 - np.equal(t,1).astype(int) * step(m - 9.5))
 
             # Compute normalized monthly weights, which will be between
             # 0 and 1, and will some to one.
