@@ -53,16 +53,20 @@ ppt <- df3[c("ppt1", "ppt2", "ppt3", "ppt4", "ppt5", "ppt6", "ppt7", "ppt8",
 # creating the list of data to send to JAGS
 data = list('block'=block, 'YearID'=YearID, 'Event'=Event, 'ppt'=ppt)
 
-jags <- jags.model('ogle_model.R', data=data, n.chains=4, n.adapt=100)
+nsamples <- 10000
+nadapt <- 100
+nchains <- 4
+jags <- jags.model('ogle_model.R', data=data, n.chains=nchains, n.adapt=nadapt)
 samples <- jags.samples(jags, c('NPP', 'a', 'Event', 'mu', 'sig', 'tau',
-                                'mu_ev', 'sig_ev', 'tau_ev'), 1000)
-png('plot_1.png')
-plot(samples$NPP)
-dev.off()
+                                'mu_ev', 'sig_ev', 'tau_ev'), nsamples)
+#png('plot_1.png')
+#plot(samples$NPP)
+#dev.off()
+
+
 
 NPP <- samples$NPP
-
-#plot(NPP)
+print(NPP)
 
 
 
