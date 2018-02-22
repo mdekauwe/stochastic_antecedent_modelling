@@ -5,8 +5,7 @@
 # Port of Ogle's ANPP OpenBUGS example from Appendix 2. See Box 2 in
 # the main text.
 #
-# This is the wrapper function: sets things up, calls the model script and
-# does something with the result
+# Make some plots ...
 #
 # Reference
 # ---------
@@ -58,64 +57,26 @@ df3 = read.table("data/dataset3.csv",  na.strings="NA", skip=1, sep=" ",
 ppt <- df3[c("ppt1", "ppt2", "ppt3", "ppt4", "ppt5", "ppt6", "ppt7", "ppt8",
              "ppt9", "ppt10", "ppt11", "ppt12")]
 
-
 #
-## MCMC ...
-#
-
-# creating the list of data to send to JAGS
-data = list('block'=block, 'YearID'=YearID, 'Event'=Event, 'ppt'=ppt)
-
-samples <- 10000
-burn <- samples * 0.1
-nadapt <- 100  # adaptions to tune sampler
-nchains <- 4
-# thinning rate, save every 10th iteration to reduce correlation between
-# consecutive values in the chain
-thin <- 10
-jags <- jags.model('ogle_model.R', data=data, n.chains=nchains, n.adapt=nadapt)
-fit <- coda.samples(jags, n.iter=samples, n.burnin=burn, thin=thin,
-                             variable.names=c('mu','a','deviance','Dsum'))
-
-#
-## Extract ouputs
+## Plot raw data ....
 #
 
-for (i in 1:nchains) {
+INCH_TO_MM <- 25.4
+annual_ppt <- rowSums(df3[, c(2,3,4,5,6,7,8,9,10,11,12,13)]) * INCH_TO_MM
+df_ppt <- data.frame(df3$Year, annual_ppt)
+colnames(df_ppt) <- c("Year", "Precipitation")
 
-  # Extract fitted model
-  write.csv(fit[[i]], file=paste("outputs/samples_store_iter1to",
-            samples, sprintf("_chain%i.csv", i), sep=""), row.names=FALSE)
+df <- data.frame(df2$Year, df2$NPP)
+colnames(df) <- c("Year","NPP")
 
-  # Save states
-  ss <- coef(jags, chain=i)
-  save(ss, file=paste("outputs/saved_state_iter", samples,
-       sprintf("_chain%i.R", i), sep=""))
+theme_set(theme_cowplot(font_size=12))
 
-}
+ax1 <- ggplot(data=df) +
+  geom_point(aes(x=Year, y=NPP))
 
-# Before assessing the Gelman criteria, first check that hte posterior
-# distributions are all approximately Normal.
-densplot(fit)
-
-# Rhat values for Gelman criteria
-# NOT CURRENTLY WORKING - DON'T KNOW WHY.
-z <- fit
-g <- matrix(NA, nrow=nvar(z), ncol=51)
-
-for (v in 1:nvar(z)) {
-
-  x <- gelman.plot(z[,v])
-  y <- x$shrink
-  g[v,] <- y[,,1]
-
-}
-
-out = rbind(x$last.iter - 100, g)
-write.csv(t(out), file=paste("outputs/samples_store_iter1to", samples,
-          "_Rhat.csv", sep=""), row.names=FALSE)
-
-# Once the MCMC has converged to the posterior distribution, we compute hte
-# DIC by running the MCMC 1000 more iterations using:
-DIC.calc <- dic.samples(jags, n.iter=1000, type="pD")
-DIC.calc
+ax2 <- ggplot(data=df_ppt) +
+  geom_bar(aes(x=Year, y=Precipitation), stat="identity") +
+  xlim(min(df2[,"Year"]), max(df2[,"Year"]))
+plt <- plot_grid(ax1, ax2, labels="AUTO", align='h', hjust=0)
+save_plot("plots/NPP_precip.png", plt,
+          ncol=2, nrow=1, base_aspect_ratio=1.3)
