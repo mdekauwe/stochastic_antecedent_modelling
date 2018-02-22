@@ -70,7 +70,7 @@ ax1 <- ggplot(data=df) +
 
 ax2 <- ggplot(data=df_ppt) +
   geom_bar(aes(x=Year, y=Precipitation), stat="identity") +
-  xlim(1940, 1990)
+  xlim(min(df2[,"Year"]), max(df2[,"Year"]))
 plt <- plot_grid(ax1, ax2, labels="AUTO", align='h', hjust=0)
 save_plot("plots/NPP_precip.png", plt,
           ncol=2, nrow=1, base_aspect_ratio=1.3)
