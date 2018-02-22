@@ -54,11 +54,12 @@ ppt <- df3[c("ppt1", "ppt2", "ppt3", "ppt4", "ppt5", "ppt6", "ppt7", "ppt8",
 data = list('block'=block, 'YearID'=YearID, 'Event'=Event, 'ppt'=ppt)
 
 nsamples <- 10000
+nburnin <- nsamples * 0.1
 nadapt <- 100
 nchains <- 4
 jags <- jags.model('ogle_model.R', data=data, n.chains=nchains, n.adapt=nadapt)
 samples <- jags.samples(jags, c('NPP', 'a', 'Event', 'mu', 'sig', 'tau',
-                                'mu_ev', 'sig_ev', 'tau_ev'), nsamples)
+                                'mu_ev', 'sig_ev', 'tau_ev'), n.iter=nsamples, n.burnin=nburnin)
 #png('plot_1.png')
 #plot(samples$NPP)
 #dev.off()
