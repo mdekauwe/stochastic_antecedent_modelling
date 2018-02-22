@@ -118,4 +118,4 @@ write.csv(t(out), file=paste("outputs/samples_store_iter1to", samples,
 # Once the MCMC has converged to the posterior distribution, we compute hte
 # DIC by running the MCMC 1000 more iterations using:
 DIC.calc <- dic.samples(jags, n.iter=1000, type="pD")
-DIC.calc
+print(DIC.calc)
