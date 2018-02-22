@@ -59,24 +59,9 @@ nadapt <- 100  # adaptions to tune sampler
 nchains <- 4
 thin <- 1      # thinning rate
 jags <- jags.model('ogle_model.R', data=data, n.chains=nchains, n.adapt=nadapt)
-samples <- jags.samples(jags, n.iter=samples, n.burnin=burn, thin=thin,
-                        variable.names=c('NPP', 'a', 'Event', 'mu', 'sig',
-                                         'tau', 'mu_ev', 'sig_ev', 'tau_ev'))
-#png('plot_1.png')
-#plot(samples$NPP)
-#dev.off()
+mcmc_samples <- coda.samples(jags, n.iter=samples, n.burnin=burn, thin=thin,
+                             variable.names=c('NPP', 'a', 'Event', 'mu', 'sig',
+                                              'tau', 'mu_ev', 'sig_ev', 'tau_ev'))
 
-print(samples)
-
-
-#NPP <- samples$NPP
-#print(NPP)
-
-
-
-#df <- data.frame(df2$Year, df2$NPP, NPP)
-#print(df)
-#
-#ggplot(df, aes(x, y=value, color=variable)) +
-#    geom_point(aes(y=y1, col="y1")) +
-#    geom_point(aes(y=y2, col="y2"))
+#plot(mcmc_samples)
+summary(mcmc_samples)
