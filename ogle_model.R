@@ -93,14 +93,14 @@ model {
   sumD <- sum(sumD1)
 
   # Compute the cumulative monthly weights:
-  for(t in 1:(12*Nlag)) {
+  for (t in 1:(12*Nlag)) {
     cum_weight[t] <- sum(weightOrdered[1:t])
   }
 
   # Compute the month within year weights (alpha’s = wP,m in Box 1 in main
   # text); that is, these weights sum to 1 within each past year
   for (m in 1:12) {
-    for(t in 1:Nlag) {
+    for (t in 1:Nlag) {
       alpha[m,t] <- delta[m,t] / sum(delta[,t])
     }
   }
