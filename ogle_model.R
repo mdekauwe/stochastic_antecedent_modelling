@@ -77,7 +77,7 @@ model {
 
   # Compute sum of deltas (unnormalized weights), to be used to compute
   # the normalized antecedent weights:
-  for (t in 1:Nlag)
+  for (t in 1:Nlag) {
 
     sumD1[t] <- sum(delta[,t])
 
