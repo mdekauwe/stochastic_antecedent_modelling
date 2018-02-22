@@ -25,7 +25,6 @@ model {
   # conditions are computed
   Nlag <- 5
 
-
   #
   ## Compute anetcedent terms
   #
@@ -41,13 +40,14 @@ model {
 
   }
 
-  for (t in 1:Nlag) {
+  #for (t in 1:Nlag) {
+  for (t in 1:5) {
 
     # Compute the yearly weights:
     yr_w[t] <- sum(weight[,t])
     alphad[t] <- 1
 
-    for (m in 1:12){
+    for (m in 1:12) {
 
       # Redefine the unnormalized monthly weights to account for post-ANPP
       # harvest period; i.e., 2nd part involving equals and step functions
@@ -65,7 +65,8 @@ model {
 
       # For each time into the past, compute the weighted precipitation
       # variable.
-      for (i in Nlag:Nyrs) {
+      #for (i in Nlag:Nyrs) {
+      for (i in 5:91) {
 
         antX1[i,m,t] <- weight[m,t] * ppt[i-t+1,m]
 
@@ -77,7 +78,8 @@ model {
 
   # Compute sum of deltas (unnormalized weights), to be used to compute
   # the normalized antecedent weights:
-  for (t in 1:Nlag) {
+  #for (t in 1:Nlag) {
+  for (t in 1:5) {
 
     sumD1[t] <- sum(delta[,t])
 
@@ -85,7 +87,8 @@ model {
   sumD <- sum(sumD1[])
 
   # Compute the cumulative monthly weights:
-  for (t in 1:(12*Nlag)) {
+  #for (t in 1:(12*Nlag)) {
+  for (t in 1:(12*5)) {
 
     cum_weight[t] <- sum(weightOrdered[1:t])
 
@@ -95,7 +98,8 @@ model {
   # text); that is, these weights sum to 1 within each past year
   for (m in 1:12) {
 
-    for (t in 1:Nlag) {
+    #for (t in 1:Nlag) {
+    for (t in 1:5) {
 
       alpha[m,t] <- delta[m,t] / sum(delta[,t])
 
@@ -105,9 +109,11 @@ model {
 
   # Compute antecedent precipitation by summing the weighted precipitation
   # variable over months and past years:
-  for (i in Nlag:Nyrs) {
+  #for (i in Nlag:Nyrs) {
+  for (i in 5:91) {
 
-    for (t in 1:Nlag) {
+    #for (t in 1:Nlag) {
+    for (t in 1:5) {
 
       ant_sum1[i,t] <- sum(antX1[i,,t])
 
@@ -121,7 +127,8 @@ model {
   ## Model likelihood
   #
 
-  for (i in 1:N) {
+  #for (i in 1:N) {
+  for (i in 1:52) {
 
     # Data model (or likelihood) for the observed NPP data:
     NPP[i] ~ dnorm(mu[i], tau)
