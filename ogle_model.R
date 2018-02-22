@@ -34,7 +34,8 @@ model {
   # to use the relationship between the gamma distribution and the dirichlet
   # to assign the dirichlet prior. For each time block into the past, assign
   # the unnormalized weight (deltaX) a gamma(1,1) prior:
-  for (j in 1:Nblocks) {
+  #for (j in 1:Nblocks) {
+  for (j in 1:38) {
 
     deltaX[j] ~ dgamma(1,1)
 
