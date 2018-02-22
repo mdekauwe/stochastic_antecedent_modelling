@@ -61,6 +61,7 @@ model {
     # Compute the yearly weights:
     yr_w[t] <- sum(weight[,t])
     alphad[t] <- 1
+
     for (m in 1:12){
       # Redefine the unnormalized monthly weights to account for post-ANPP
       # harvest period; i.e., 2nd part involving equals and step functions
