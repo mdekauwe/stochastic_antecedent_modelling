@@ -53,13 +53,15 @@ ppt <- df3[c("ppt1", "ppt2", "ppt3", "ppt4", "ppt5", "ppt6", "ppt7", "ppt8",
 # creating the list of data to send to JAGS
 data = list('block'=block, 'YearID'=YearID, 'Event'=Event, 'ppt'=ppt)
 
-nsamples <- 10000
-nburnin <- nsamples * 0.1
-nadapt <- 100
+samples <- 100000
+burn <- nsamples * 0.1
+nadapt <- 100  # adaptions to tune sampler
 nchains <- 4
+thin <- 1      # thinning rate
 jags <- jags.model('ogle_model.R', data=data, n.chains=nchains, n.adapt=nadapt)
-samples <- jags.samples(jags, c('NPP', 'a', 'Event', 'mu', 'sig', 'tau',
-                                'mu_ev', 'sig_ev', 'tau_ev'), n.iter=nsamples, n.burnin=nburnin)
+samples <- jags.samples(jags, n.iter=samples, n.burnin=burn, thin=thin,
+                        variable.names=c('NPP', 'a', 'Event', 'mu', 'sig',
+                                         'tau', 'mu_ev', 'sig_ev', 'tau_ev'))
 #png('plot_1.png')
 #plot(samples$NPP)
 #dev.off()
