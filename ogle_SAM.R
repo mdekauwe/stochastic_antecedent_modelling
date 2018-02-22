@@ -73,7 +73,7 @@ nchains <- 4
 # thinning rate, save every 10th iteration to reduce correlation between
 # consecutive values in the chain
 thin <- 10
-jags <- jags.model('ogle_model.R', data=data, n.chains=nchains, n.adapt=nadapt)
+jags <- jags.model('model.bugs', data=data, n.chains=nchains, n.adapt=nadapt)
 fit <- coda.samples(jags, n.iter=samples, n.burnin=burn, thin=thin,
                              variable.names=c('mu','a','deviance','Dsum'))
 

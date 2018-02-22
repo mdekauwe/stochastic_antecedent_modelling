@@ -1,12 +1,6 @@
-#!/usr/bin/Rscript
-
-# Ogle et al.'s stochastic antecedent modelling (SAM) framework
 #
-# Port of Ogle's ANPP OpenBUGS example from Appendix 2. See Box 2 in
-# the main text.
-#
-# This is the ANPP model which is called by the wrapper script
-#
+# This is the ANPP model which is called by the wrapper script based on the
+# example in Ogle et al.
 #
 # Reference
 # ---------
