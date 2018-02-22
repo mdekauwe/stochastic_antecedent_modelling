@@ -16,6 +16,16 @@
 
 model {
 
+  INCH_TO_MM <- 25.4
+  N <- 52
+  Nyrs <- 91
+  Nblocks <- 38
+
+  # Number of past years, including the current year for which the antecedent
+  # conditions are computed
+  Nlag <- 5
+
+
   #
   ## Compute anetcedent terms
   #

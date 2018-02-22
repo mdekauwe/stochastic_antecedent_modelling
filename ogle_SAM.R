@@ -16,15 +16,11 @@
 
 library(rjags)
 
-INCH_TO_MM <- 25.4
-N <- 52
-Nyrs <- 91
-Nblocks <- 38
+wd <- getwd()
+setwd(wd)
 
-# Number of past years, including the current year for which the antecedent
-# conditions are computed
-Nlag <- 5
-
+# dataset 1
+#
 # the time block that each month is assigned to such that for 60 different
 # months, we are only estimating 38 unique monthly weights
 block = c(1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17,
@@ -33,10 +29,6 @@ block = c(1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17,
           34, 35, 35, 35, 36, 36, 36, 37, 37, 37, 38,
           38, 38)
 block <- matrix(block, 5, 12)
-
-
-wd <- getwd()
-setwd(wd)
 
 # ANPP and precipitation event data for each year, extracted from Lauenroth
 # and Sala (1992).
@@ -58,7 +50,7 @@ ppt <- df3[c("ppt1", "ppt2", "ppt3", "ppt4", "ppt5", "ppt6", "ppt7", "ppt8",
              "ppt9", "ppt10", "ppt11", "ppt12")]
 
 # creating the list of data to send to JAGS
-data = list('YearID' = YearID,'Event' = Event, 'ppt' = ppt)
+data = list('block'=block, 'YearID'=YearID, 'Event'=Event, 'ppt'=ppt)
 
 jags <- jags.model('ogle_model.R', data=data, n.chains=4, n.adapt=100)
 update(jags, 1000)
