@@ -79,7 +79,7 @@ model {
       # For each time into the past, compute the weighted precipitation
       # variable.
       for (i in Nlag:Nyrs) {
-        antX1[i,m,t] <- weight[m,t]*ppt[i-t+1,m]
+        antX1[i,m,t] <- weight[m,t] * df3$ppt[i-t+1,m]
       }
     }
   }
@@ -134,5 +134,5 @@ model {
     sig_ev[k] ~ dunif(0, 500)
     tau_ev[k] <- pow(sig_ev[k], -2)
   }
-  
+
 }
