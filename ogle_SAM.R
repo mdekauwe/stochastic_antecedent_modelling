@@ -60,8 +60,10 @@ nchains <- 4
 thin <- 1      # thinning rate
 jags <- jags.model('ogle_model.R', data=data, n.chains=nchains, n.adapt=nadapt)
 mcmc_samples <- coda.samples(jags, n.iter=samples, n.burnin=burn, thin=thin,
-                             variable.names=c('NPP', 'a', 'Event', 'mu', 'sig',
-                                              'tau', 'mu_ev', 'sig_ev', 'tau_ev'))
+                             variable.names=c('mu'))
+#mcmc_samples <- coda.samples(jags, n.iter=samples, n.burnin=burn, thin=thin,
+#                             variable.names=c('NPP', 'a', 'Event', 'mu', 'sig',
+#                                              'tau', 'mu_ev', 'sig_ev', 'tau_ev'))
 
 #plot(mcmc_samples)
 summary(mcmc_samples)
