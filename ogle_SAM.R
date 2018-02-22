@@ -21,6 +21,10 @@ library(cowplot)
 wd <- getwd()
 setwd(wd)
 
+#
+## Setup driving data ...
+#
+
 # dataset 1
 #
 # the time block that each month is assigned to such that for 60 different
@@ -75,10 +79,9 @@ plt <- plot_grid(ax1, ax2, labels="AUTO", align='h', hjust=0)
 save_plot("plots/NPP_precip.png", plt,
           ncol=2, nrow=1, base_aspect_ratio=1.3)
 
-
-
-
-
+#
+## MCMC ...
+#
 
 # creating the list of data to send to JAGS
 data = list('block'=block, 'YearID'=YearID, 'Event'=Event, 'ppt'=ppt)
@@ -94,6 +97,10 @@ jags <- jags.model('ogle_model.R', data=data, n.chains=nchains, n.adapt=nadapt)
 fit <- coda.samples(jags, n.iter=samples, n.burnin=burn, thin=thin,
                              variable.names=c('mu'))
 
+
+#
+## Extract fitted model and plot against raw data ... no idea how!
+#
 
 #plot(mcmc_samples)
 #summary(fit)
