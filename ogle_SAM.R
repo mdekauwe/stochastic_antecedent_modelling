@@ -55,12 +55,11 @@ df3 = read.table("data/dataset3.csv",  na.strings="NA", skip=1, sep=" ",
 
 model {
 
+  #
+  ## Model likelihood
+  #
+
   for (i in 1:N) {
-
-    #
-    ## Model likelihood
-    #
-
     # Data model (or likelihood) for the observed NPP data:
     NPP[i] <- dnorm(mu[i], tau)
 
@@ -75,8 +74,17 @@ model {
     mu[i] <- ( a[1] + (a[2] * antX[df2$YearID[i]] * INCH_TO_MM) +
               (a[3] * df2$Event[i,1]) + (a[4] * df2$Event[i,2]) +
               (a[5] * df2$Event[i,3]) + (a[6] * df2$Event[i,4]) )
-
   }
+
+  # Compute the identifiable month within year weights (alpha’s = wP,m in
+  # Box 1 in main text); that is, these weights sum to 1 within each past
+  # year
+  for (m in 1:12) {
+    for (t in 1:Nlag) {
+      alpha[m,t] <- delta[m,t] / sum(delta[,t])
+   }
+
+ }
 
   #
   ## Priors
@@ -84,13 +92,11 @@ model {
 
   # Assign priors to the ANPP regression parameters (covariate effects):
   for (k in 1:6) {
-
     # Priors for non-identifiable parameters:
     a[k] <- dnorm(0, 1E-07)
 
     # Compute identifiable parameters for the covariate-centered ANPP model
     a_star[k] <- a[k] * ((1 - equals(k,2)) + equals(k,2) * sumD)
-
   }
 
   # Prior for residual (observation) standard deviation, and compute
@@ -100,11 +106,9 @@ model {
 
   # Priors for parameters in the Event missing data model:
   for (k in 1:4) {
-
     mu_ev[k] <- dunif(0, 500)
     sig_ev[k] <- dunif(0, 500)
     tau_ev[k] <- pow(sig_ev[k], -2)
-
   }
 
 
