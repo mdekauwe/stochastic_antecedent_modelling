@@ -57,7 +57,9 @@ samples <- 10000
 burn <- samples * 0.1
 nadapt <- 100  # adaptions to tune sampler
 nchains <- 4
-thin <- 1      # thinning rate
+# thinning rate, save every 10th iteration to reduce correlation between
+# consecutive values in the chain
+thin <- 10
 jags <- jags.model('ogle_model.R', data=data, n.chains=nchains, n.adapt=nadapt)
 mcmc_samples <- coda.samples(jags, n.iter=samples, n.burnin=burn, thin=thin,
                              variable.names=c('mu', "tau"))
