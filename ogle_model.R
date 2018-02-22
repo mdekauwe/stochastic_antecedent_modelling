@@ -111,13 +111,6 @@ model {
 
   }
 
-  #for (i in 1:5) {
-
-    # ****this isn't in Ogle, but I think it should be **************************
-    #a[i] <- sum(alpha[,i])
-
-  #}
-
   # Compute antecedent precipitation by summing the weighted precipitation
   # variable over months and past years ("exogenous variable"):
   #for (i in Nlag:Nyrs) {
