@@ -53,8 +53,8 @@ ppt <- df3[c("ppt1", "ppt2", "ppt3", "ppt4", "ppt5", "ppt6", "ppt7", "ppt8",
 # creating the list of data to send to JAGS
 data = list('block'=block, 'YearID'=YearID, 'Event'=Event, 'ppt'=ppt)
 
-samples <- 100000
-burn <- nsamples * 0.1
+samples <- 10000
+burn <- samples * 0.1
 nadapt <- 100  # adaptions to tune sampler
 nchains <- 4
 thin <- 1      # thinning rate
@@ -66,10 +66,11 @@ samples <- jags.samples(jags, n.iter=samples, n.burnin=burn, thin=thin,
 #plot(samples$NPP)
 #dev.off()
 
+print(samples)
 
 
-NPP <- samples$NPP
-print(NPP)
+#NPP <- samples$NPP
+#print(NPP)
 
 
 
