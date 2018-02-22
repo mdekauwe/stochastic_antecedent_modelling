@@ -163,7 +163,9 @@ model {
   ## Priors
   #
 
-  # Assign priors to the ANPP regression parameters (covariate effects):
+  # Assign priors to the ANPP regression parameters. "a" is a vector of
+  # coefficients that describes the effects of the exogenous (e.g. PPT) and
+  # endogeneous (e.g. past events) covariates on mu.
   for (k in 1:6) {
 
     a[k] ~ dnorm(0, 1E-07)
