@@ -83,6 +83,10 @@ model {
     }
   }
 
+  #
+  ## Compute anetcedent terms
+  #
+
   # Dirichlet prior for monthly precipitation weights (due to restrictions
   # on when the built-in dirichlet distribution can be used, we are required
   # to use the relationship between the gamma distribution and the dirichlet
