@@ -112,7 +112,7 @@ model {
   }
 
   # Compute antecedent precipitation by summing the weighted precipitation
-  # variable over months and past years:
+  # variable over months and past years ("exogenous variable"):
   #for (i in Nlag:Nyrs) {
   for (i in 5:91) {
 

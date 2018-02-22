@@ -136,7 +136,7 @@ with pm.Model() as model:
             alpha[m,t] = delta[m,t] / sum(delta[:,t])
 
     # Compute antecedent precipitation by summing the weighted precipitation
-    # variable over months and past years:
+    # variable over months and past years ("exogenous variable"):
     for i in range(Nlag, Nyrs+1):
         for t in range(Nlag):
             ant_sum1[i,t] = sum(antX1[i,:,t])
