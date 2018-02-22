@@ -143,8 +143,7 @@ model {
     # Define model for latent (mean) NPP; Event[,k] represents the amount
     # of precipitation received in different size classes, where k indexes
     # the even size class (k=1 for < 5 mm; k=2 for 5-15 mm; k=3 for 15-
-    # 30 mm; k=4 for >30 mm); convert antecedent precipitation (antX) from
-    # inches to mm.
+    # 30 mm; k=4 for >30 mm)
     mu[i] <- ( a[1] + (a[2] * antX[YearID[i]] * INCH_TO_MM) +
               (a[3] * Event[i,1]) + (a[4] * Event[i,2]) +
               (a[5] * Event[i,3]) + (a[6] * Event[i,4]) )
