@@ -84,12 +84,12 @@ fit <- coda.samples(jags, n.iter=samples, n.burnin=burn, thin=thin,
 for (i in 1:nchains) {
 
   # Extract fitted model
-  write.csv(fit[[i]], file=paste("outputs/samples_store_iter1to",
+  write.csv(fit[[i]], file=paste("outputs/samples_iter_1_to_",
             samples, sprintf("_chain%i.csv", i), sep=""), row.names=FALSE)
 
   # Save states
   ss <- coef(jags, chain=i)
-  save(ss, file=paste("outputs/saved_state_iter", samples,
+  save(ss, file=paste("outputs/saved_state_iter_1_to_", samples,
        sprintf("_chain%i.R", i), sep=""))
 
 }
