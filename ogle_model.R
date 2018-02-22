@@ -148,6 +148,13 @@ model {
               (a[3] * Event[i,1]) + (a[4] * Event[i,2]) +
               (a[5] * Event[i,3]) + (a[6] * Event[i,4]) )
 
+    # Compute first part of deviance
+    D[i] <- log(2 * 3.1415926535) - log(tau) + (pow(NPP[i] - mu[i], 2) * tau)
+
+    # Part of the calculation of the posterior predictive loss.
+    # After each iteration we also compute Dsum, which is at end of this script.
+    sq_diff[i] <- pow(NPP_rep[i] - NPP[i], 2)
+
     # Some of the precipitation event data are missing, so specify a simple
     # data model for the Event data for the purpose of estimating the
     # missing data:
@@ -185,5 +192,11 @@ model {
     tau_ev[k] <- pow(sigma_ev[k], -2)
 
   }
+
+  # Second part of deviance calculation
+  deviance <- sum(D)
+
+  # Posterior predictive loss is the posterior mean of Dsum
+  Dsum <- sum(sq_diff[])
 
 }
