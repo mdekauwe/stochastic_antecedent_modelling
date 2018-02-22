@@ -16,6 +16,7 @@
 
 library(rjags)
 library(ggplot2)
+library(cowplot)
 
 wd <- getwd()
 setwd(wd)
@@ -50,6 +51,26 @@ df3 = read.table("data/dataset3.csv",  na.strings="NA", skip=1, sep=" ",
 ppt <- df3[c("ppt1", "ppt2", "ppt3", "ppt4", "ppt5", "ppt6", "ppt7", "ppt8",
              "ppt9", "ppt10", "ppt11", "ppt12")]
 
+# plot data
+INCH_TO_MM <- 25.4
+ppt <- rowSums(df3[, c(2,3,4,5,6,7,8,9,10,11,12,13)]) * INCH_TO_MM
+df_ppt <- data.frame(df3$Year, ppt)
+colnames(df_ppt) <- c("Year", "Precipitation")
+
+df <- data.frame(df2$Year, df2$NPP)
+colnames(df) <- c("Year","NPP")
+
+theme_set(theme_cowplot(font_size=12))
+
+ax1 <- ggplot(data=df) +
+  geom_point(aes(x=Year, y=NPP))
+
+ax2 <- ggplot(data=df_ppt) +
+  geom_bar(aes(x=Year, y=Precipitation), stat="identity")
+plt <- plot_grid(ax1, ax2, labels="AUTO", align='h', hjust=0)
+save_plot("plots/NPP_precip.png", plt,
+          ncol=2, nrow=1, base_aspect_ratio=1.3)
+
 # creating the list of data to send to JAGS
 data = list('block'=block, 'YearID'=YearID, 'Event'=Event, 'ppt'=ppt)
 
@@ -64,11 +85,6 @@ jags <- jags.model('ogle_model.R', data=data, n.chains=nchains, n.adapt=nadapt)
 fit <- coda.samples(jags, n.iter=samples, n.burnin=burn, thin=thin,
                              variable.names=c('mu'))
 
-df <- data.frame(df2$Year, df2$NPP)
-colnames(df) <- c("Year","NPP")
-ggplot(data=df, aes(x=Year, y=NPP)) +
-    geom_point() +
-    theme(aspect.ratio = 2 / (1 + sqrt(5))) # golden ratio landscape
 
 #plot(mcmc_samples)
 #summary(fit)
