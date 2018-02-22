@@ -50,8 +50,30 @@ df2 = read.table("data/dataset2.csv", na.strings="NA", skip=1, sep=" ",
 # Center. Ideally, we would want to use monthly precipitation from the study
 # site (CPER), but this site did not provide complete monthly records for
 # multiple years prior to the onset of the ANPP measurements.
-df3 = read.table("data/dataset3.csv",  na.strings="NA", skip=1, sep=" ",
+ppt = read.table("data/dataset3.csv",  na.strings="NA", skip=1, sep=" ",
                  stringsAsFactors=FALSE, header=TRUE)
+
+#creating the list of data to send to JAGS
+data <- list()
+data[[1]] <- Trt
+data[[2]] <- d2$GPP
+data[[3]] <- flatten(SWC_DSM1)#
+data[[4]] <- flatten(Temp_DST1)#
+data[[5]] <- flatten(VPDh)
+data[[6]] <- PARh
+data[[7]] <- flatten(Gness)#
+data[[8]] <- flatten(Abg_Nit)#
+data[[9]] <- flatten(VPD_antX2)#
+data[[10]] <- flatten(SWC_DSM1_antX2)
+data[[11]] <- flatten(Temp_DST1_antX2)#
+data[[12]] <- d2$year
+data[[13]] <- d2$Plot_Ed
+data[[14]] <- d2$Hour_GPP
+data[[15]] <- d2$DayN
+data[[16]] <- flatten(GnessDiff_antX2)   #
+data[[17]] <- d2$CO2umol
+data[[18]] <- CO2switch
+
 
 
 n_adapt = 100
