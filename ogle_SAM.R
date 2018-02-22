@@ -86,7 +86,7 @@ model {
   for (k in 1:6) {
 
     # Priors for non-identifiable parameters:
-    a[k] <- dnorm(0, 0.0000001)
+    a[k] <- dnorm(0, 1E-07)
 
     # Compute identifiable parameters for the covariate-centered ANPP model
     a_star[k] <- a[k] * ((1 - equals(k,2)) + equals(k,2) * sumD)
