@@ -58,17 +58,8 @@ ppt <- df3[c("ppt1", "ppt2", "ppt3", "ppt4", "ppt5", "ppt6", "ppt7", "ppt8",
              "ppt9", "ppt10", "ppt11", "ppt12")]
 
 # creating the list of data to send to JAGS
-data <- list()
-data[[1]] <- YearID
-data[[2]] <- Event # multi-dim?
-data[[3]] <- ppt   # multi-dim?
+data = list('YearID' = YearID,'Event' = Event, 'ppt' = ppt)
 
-
-
-
-n_adapt = 100
-poodel = jags.model("ogle_model.R",
-                    data=datalist,
-                    inits=inits,
-                    n.adapt=n_adapt,
-                    n.chains=length(inits))
+jags <- jags.model('ogle_model.R', data=data, n.chains=4, n.adapt=100)
+update(jags, 1000)
+jags.samples(jags, c('NPP'), 1000)
