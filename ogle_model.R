@@ -171,7 +171,7 @@ model {
   # Prior for residual (observation) standard deviation, and compute
   # associated precision:
   sig ~ dunif(0, 100)
-  tau <- pow(sig, -2)
+  tau <- pow(sig, -2) # precision (1 / variance)
 
   # Priors for parameters in the Event missing data model:
   for (k in 1:4) {
