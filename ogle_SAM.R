@@ -76,7 +76,25 @@ model {
               (a[5] * df2$Event[i,3]) + (a[6] * df2$Event[i,4]) )
   }
 
+  # Compute sum of deltas (unnormalized weights), to be used to compute
+  # the normalized antecedent weights:
+  for (t in 1:Nlag)
+    sumD1[t] <- sum(delta[,t])
+  }
+  sumD <- sum(sumD1)
 
+  # Compute the cumulative monthly weights:
+  for(t in 1:(12*Nlag)) {
+    cum_weight[t] <- sum(weightOrdered[1:t])
+  }
+
+  # Compute the month within year weights (alpha’s = wP,m in Box 1 in main
+  # text); that is, these weights sum to 1 within each past year
+  for (m in 1:12) {
+    for(t in 1:Nlag) {
+      alpha[m,t] <- delta[m,t] / sum(delta[,t])
+    }
+  }
 
   # Compute antecedent precipitation by summing the weighted precipitation
   # variable over months and past years:
