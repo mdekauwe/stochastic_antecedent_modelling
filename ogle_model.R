@@ -82,7 +82,7 @@ model {
     sumD1[t] <- sum(delta[,t])
 
   }
-  sumD <- sum(sumD1)
+  sumD <- sum(sumD1[])
 
   # Compute the cumulative monthly weights:
   for (t in 1:(12*Nlag)) {
