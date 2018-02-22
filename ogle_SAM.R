@@ -75,7 +75,7 @@ nchains <- 4
 thin <- 10
 jags <- jags.model('model.R', data=data, n.chains=nchains, n.adapt=nadapt)
 fit <- coda.samples(jags, n.iter=samples, n.burnin=burn, thin=thin,
-                             variable.names=c('mu','a','deviance','Dsum'))
+                    variable.names=c('mu','a','deviance','Dsum'))
 
 #
 ## Extract ouputs
@@ -100,12 +100,11 @@ densplot(fit)
 
 # Rhat values for Gelman criteria
 # NOT CURRENTLY WORKING - DON'T KNOW WHY.
-z <- fit
-g <- matrix(NA, nrow=nvar(z), ncol=51)
+g <- matrix(NA, nrow=nvar(fit), ncol=51)
 
-for (v in 1:nvar(z)) {
+for (v in 1:nvar(fit)) {
 
-  x <- gelman.plot(z[,v])
+  x <- gelman.plot(fit[,v])
   y <- x$shrink
   g[v,] <- y[,,1]
 
