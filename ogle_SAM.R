@@ -64,6 +64,11 @@ jags <- jags.model('ogle_model.R', data=data, n.chains=nchains, n.adapt=nadapt)
 fit <- coda.samples(jags, n.iter=samples, n.burnin=burn, thin=thin,
                              variable.names=c('mu'))
 
+df <- data.frame(df2$Year, df2$NPP)
+colnames(df) <- c("Year","NPP")
+ggplot(data=df, aes(x=Year, y=NPP)) +
+    geom_point() +
+    theme(aspect.ratio = 2 / (1 + sqrt(5))) # golden ratio landscape
 
 #plot(mcmc_samples)
 #summary(fit)
