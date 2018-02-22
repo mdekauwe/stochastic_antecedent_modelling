@@ -42,6 +42,7 @@ setwd(wd)
 # and Sala (1992).
 df2 = read.table("data/dataset2.csv", na.strings="NA", skip=1, sep=" ",
                  stringsAsFactors=FALSE, header=TRUE)
+Event <- df2[c("Event1", "Event2", "Event3", "Event4")]
 
 # Monthly precipitation data
 # - data were obtained for Fort Collins, Colorado, which is located about
@@ -55,15 +56,15 @@ ppt = read.table("data/dataset3.csv",  na.strings="NA", skip=1, sep=" ",
 
 #creating the list of data to send to JAGS
 data <- list()
-data[[1]] <- 
-data[[2]] <- 
-data[[3]] <- 
-data[[4]] <- 
-data[[5]] <- 
-data[[6]] <- 
-data[[7]] <- 
-data[[8]] <- 
-data[[9]] <- 
+data[[1]] <- Event
+data[[2]] <- ppt
+data[[3]] <- df2$YearID
+data[[4]] <-
+data[[5]] <-
+data[[6]] <-
+data[[7]] <-
+data[[8]] <-
+data[[9]] <-
 data[[10]] <-
 data[[11]] <-
 data[[12]] <-
