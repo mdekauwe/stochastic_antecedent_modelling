@@ -109,6 +109,8 @@ model {
 
     }
 
+    # ****this isn't in Ogle, but I think it should be **************************
+    a[i] <- sum(alpha[m,])
   }
 
   # Compute antecedent precipitation by summing the weighted precipitation
