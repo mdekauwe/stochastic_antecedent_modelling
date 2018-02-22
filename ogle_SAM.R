@@ -52,29 +52,17 @@ YearID <- df2$YearID
 # Center. Ideally, we would want to use monthly precipitation from the study
 # site (CPER), but this site did not provide complete monthly records for
 # multiple years prior to the onset of the ANPP measurements.
-ppt = read.table("data/dataset3.csv",  na.strings="NA", skip=1, sep=" ",
+df3 = read.table("data/dataset3.csv",  na.strings="NA", skip=1, sep=" ",
                  stringsAsFactors=FALSE, header=TRUE)
+ppt <- df3[c("ppt1", "ppt2", "ppt3", "ppt4", "ppt5", "ppt6", "ppt7", "ppt8",
+             "ppt9", "ppt10", "ppt11", "ppt12")]
 
-#creating the list of data to send to JAGS
+# creating the list of data to send to JAGS
 data <- list()
 data[[1]] <- YearID
-data[[2]] <- Event
-data[[3]] <- ppt
-data[[4]] <-
-data[[5]] <-
-data[[6]] <-
-data[[7]] <-
-data[[8]] <-
-data[[9]] <-
-data[[10]] <-
-data[[11]] <-
-data[[12]] <-
-data[[13]] <-
-data[[14]] <-
-data[[15]] <-
-data[[16]] <-
-data[[17]] <-
-data[[18]] <-
+data[[2]] <- Event # multi-dim?
+data[[3]] <- ppt   # multi-dim?
+
 
 
 
