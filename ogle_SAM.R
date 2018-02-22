@@ -90,7 +90,7 @@ for (i in 1:nchains) {
   # Save states
   ss <- coef(jags, chain=i)
   save(ss, file=paste("outputs/saved_state_iter_1_to_", samples,
-       sprintf("_chain%i.R", i), sep=""))
+       sprintf("_chain%i.bin", i), sep=""))
 
 }
 
@@ -104,6 +104,7 @@ g <- matrix(NA, nrow=nvar(fit), ncol=51)
 
 for (v in 1:nvar(fit)) {
 
+  # compare chains to check on mixing
   x <- gelman.plot(fit[,v])
   y <- x$shrink
   g[v,] <- y[,,1]
