@@ -111,7 +111,7 @@ for (v in 1:nvar(z)) {
 
 }
 
-out = rbind(x$last.iter - 100, g)
+out <- rbind(x$last.iter - 100, g)
 write.csv(t(out), file=paste("outputs/samples_iter_1_to_", samples,
           "_Rhat.csv", sep=""), row.names=FALSE)
 
