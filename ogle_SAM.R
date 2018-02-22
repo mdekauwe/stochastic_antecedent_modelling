@@ -14,6 +14,8 @@
 # Email: mdekauwe@gmail.com
 # Date: 22.02.2018
 
+library(rjags)
+
 INCH_TO_MM <- 25.4
 N <- 52
 Nyrs <- 91
@@ -51,4 +53,44 @@ df2 = read.table("data/dataset2.csv", na.strings="NA", skip=1, sep=" ",
 df3 = read.table("data/dataset3.csv",  na.strings="NA", skip=1, sep=" ",
                  stringsAsFactors=FALSE, header=TRUE)
 
-print(df3)
+model {
+
+  for (i in 1:N) {
+
+    ## Model likelihood
+
+    # Data model (or likelihood) for the observed NPP data:
+    NPP[i] <- dnorm(mu[i], tau)
+
+    # Generate “replicated data” to evaluate model fit.
+    NPP_rep[i] <- dnorm(mu[i], tau)
+
+    # Define model for latent (mean) NPP; Event[,k] represents the amount
+    # of precipitation received in different size classes, where k indexes
+    # the even size class (k=1 for < 5 mm; k=2 for 5-15 mm; k=3 for 15-
+    # 30 mm; k=4 for >30 mm); convert antecedent precipitation (antX) from
+    # inches to mm.
+    mu[i] <- ( a[1] + (a[2] * antX[df2$YearID[i]] * INCH_TO_MM) +
+              (a[3] * df2$Event[i,1]) + (a[4] * df2$Event[i,2]) +
+              (a[5] * df2$Event[i,3]) + (a[6] * df2$Event[i,4]) )
+
+  }
+
+  ## Priors
+
+  # Prior for residual (observation) standard deviation, and compute
+  # associated precision:
+  sig <- dunif(0, 100)
+  tau <- pow(sig,-2)
+
+  # Priors for parameters in the Event missing data model:
+  for (k in 1:4) {
+
+    mu_ev[k] <- dunif(0, 500)
+    sig_ev[k] <- dunif(0, 500)
+    tau_ev[k] <- pow(sig_ev[k], -2)
+
+  }
+
+
+}

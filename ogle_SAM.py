@@ -1,8 +1,10 @@
 #!/usr/bin/env python
 
 """
-Attempt to port Ogle's ANPP OpenBUGS example from Appendix 2. See Box 2 in the
-main text.
+Ogle et al.'s stochastic antecedent modelling (SAM) framework
+
+- Attempt to port Ogle's ANPP OpenBUGS example from Appendix 2. See Box 2 in the
+  main text.
 
 Reference
 ---------
@@ -65,12 +67,12 @@ with pm.Model() as model:
     # Prior for residual (observation) standard deviation, and compute
     # associated precision
     sig = pm.Uniform('sig', 0, 100)
-    tau = tt.pow(sig, -2)
+    tau = np.power(sig, -2)
 
     # Priors for parameters in the Event missing data model:
     mu_ev = pm.Uniform('mu_ev', 0, 500, shape=4)
     sig_ev = pm.Uniform('sig_ev', 0, 500, shape=4)
-    tau_ev = tt.pow(sig_ev, -2)
+    tau_ev = np.power(sig_ev, -2)
 
     # Some of the precipitation event data are missing, so specify a simple
     # data model for the Event data for the purpose of estimating the
