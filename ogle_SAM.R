@@ -2,8 +2,11 @@
 
 # Ogle et al.'s stochastic antecedent modelling (SAM) framework
 #
-# - Attempt to port Ogle's ANPP OpenBUGS example from Appendix 2. See Box 2 in
-#   the main text.
+# Port of Ogle's ANPP OpenBUGS example from Appendix 2. See Box 2 in
+# the main text.
+#
+# This is the wrapper function: sets things up, calls the model script and
+# does something with the result
 #
 # Reference
 # ---------
