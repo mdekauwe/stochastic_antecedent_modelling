@@ -1,7 +1,9 @@
-# Ogle_2015_SAM
+# Stochastic Antecedent Modelling (SAM) framework
 
-Ogle's stochastic antecedent modelling (SAM) framework winbugs example model ported to pymc3. See Appendix in Ogle for details.
+Attempt to replicate the example(s) from Ogle's et al. 2015 paper. See Box 1 in the paper and the appendix for further details.
 
+I've tried to port this to pymc3 but that isn't working. The R version seems to
+"run".
 
 
 ## Reference
