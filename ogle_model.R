@@ -26,15 +26,19 @@ model {
   # to assign the dirichlet prior. For each time block into the past, assign
   # the unnormalized weight (deltaX) a gamma(1,1) prior:
   for (j in 1:Nblocks) {
+
     deltaX[j] ~ dgamma(1,1)
+
   }
 
   for (t in 1:Nlag) {
+
     # Compute the yearly weights:
     yr_w[t] <- sum(weight[,t])
     alphad[t] <- 1
 
     for (m in 1:12){
+
       # Redefine the unnormalized monthly weights to account for post-ANPP
       # harvest period; i.e., 2nd part involving equals and step functions
       # sets weight = 0 if in year 1 and in Oct, Nov, or Dec
@@ -52,38 +56,55 @@ model {
       # For each time into the past, compute the weighted precipitation
       # variable.
       for (i in Nlag:Nyrs) {
+
         antX1[i,m,t] <- weight[m,t] * ppt[i-t+1,m]
+
       }
+
     }
+
   }
 
   # Compute sum of deltas (unnormalized weights), to be used to compute
   # the normalized antecedent weights:
   for (t in 1:Nlag)
+
     sumD1[t] <- sum(delta[,t])
+
   }
   sumD <- sum(sumD1)
 
   # Compute the cumulative monthly weights:
   for (t in 1:(12*Nlag)) {
+
     cum_weight[t] <- sum(weightOrdered[1:t])
+
   }
 
   # Compute the month within year weights (alpha’s = wP,m in Box 1 in main
   # text); that is, these weights sum to 1 within each past year
   for (m in 1:12) {
+
     for (t in 1:Nlag) {
+
       alpha[m,t] <- delta[m,t] / sum(delta[,t])
+
     }
+
   }
 
   # Compute antecedent precipitation by summing the weighted precipitation
   # variable over months and past years:
   for (i in Nlag:Nyrs) {
+
     for (t in 1:Nlag) {
+
       ant_sum1[i,t] <- sum(antX1[i,,t])
+
     }
+
     antX[i] <- sum(ant_sum1[i,])
+
   }
 
   #
@@ -91,6 +112,7 @@ model {
   #
 
   for (i in 1:N) {
+
     # Data model (or likelihood) for the observed NPP data:
     NPP[i] ~ dnorm(mu[i], tau)
 
@@ -110,8 +132,11 @@ model {
     # data model for the Event data for the purpose of estimating the
     # missing data:
     for (k in 1:4) {
+
       Event[i,k] ~ dnorm(mu_ev[k], tau_ev[k])
+
     }
+
   }
 
   #
@@ -120,7 +145,9 @@ model {
 
   # Assign priors to the ANPP regression parameters (covariate effects):
   for (k in 1:6) {
+
     a[k] ~ dnorm(0, 1E-07)
+
   }
 
   # Prior for residual (observation) standard deviation, and compute
@@ -130,9 +157,11 @@ model {
 
   # Priors for parameters in the Event missing data model:
   for (k in 1:4) {
+
     mu_ev[k] ~ dunif(0, 500)
     sig_ev[k] ~ dunif(0, 500)
     tau_ev[k] <- pow(sig_ev[k], -2)
+
   }
 
 }
