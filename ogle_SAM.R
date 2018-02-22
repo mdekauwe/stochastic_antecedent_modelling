@@ -53,5 +53,4 @@ ppt <- df3[c("ppt1", "ppt2", "ppt3", "ppt4", "ppt5", "ppt6", "ppt7", "ppt8",
 data = list('block'=block, 'YearID'=YearID, 'Event'=Event, 'ppt'=ppt)
 
 jags <- jags.model('ogle_model.R', data=data, n.chains=4, n.adapt=100)
-update(jags, 1000)
-jags.samples(jags, c('NPP'), 1000)
+jags.samples(jags, c('NPP'), 100000)
