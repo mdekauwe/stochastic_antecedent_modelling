@@ -76,15 +76,17 @@ model {
               (a[5] * df2$Event[i,3]) + (a[6] * df2$Event[i,4]) )
   }
 
-  # Compute the identifiable month within year weights (alpha’s = wP,m in
-  # Box 1 in main text); that is, these weights sum to 1 within each past
-  # year
-  for (m in 1:12) {
-    for (t in 1:Nlag) {
-      alpha[m,t] <- delta[m,t] / sum(delta[,t])
-   }
 
- }
+
+  # Compute antecedent precipitation by summing the weighted precipitation
+  # variable over months and past years:
+  for (i in Nlag:Nyrs) {
+    for (t in 1:Nlag) {
+      ant_sum1[i,t] <- sum(antX1[i,,t])
+    }
+    antX[i] <- sum(ant_sum1[i,])
+  }
+
 
   #
   ## Priors
@@ -92,11 +94,7 @@ model {
 
   # Assign priors to the ANPP regression parameters (covariate effects):
   for (k in 1:6) {
-    # Priors for non-identifiable parameters:
     a[k] <- dnorm(0, 1E-07)
-
-    # Compute identifiable parameters for the covariate-centered ANPP model
-    a_star[k] <- a[k] * ((1 - equals(k,2)) + equals(k,2) * sumD)
   }
 
   # Prior for residual (observation) standard deviation, and compute
