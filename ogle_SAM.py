@@ -61,7 +61,9 @@ delta = np.zeros((12,Nlag))
 
 with pm.Model() as model:
 
-    # Assign priors to the ANPP regression parameters (covariate effects)
+    # Assign priors to the ANPP regression parameters. "a" is a vector of
+    # coefficients that describes the effects of the exogenous (e.g. PPT) and
+    # endogeneous (e.g. past events) covariates on mu.
     a = pm.Normal('a', mu=0, sd=1E-07, shape=6)
 
     # Prior for residual (observation) standard deviation, and compute
