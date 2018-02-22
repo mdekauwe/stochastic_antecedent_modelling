@@ -98,12 +98,58 @@ nchains <- 4
 thin <- 10
 jags <- jags.model('ogle_model.R', data=data, n.chains=nchains, n.adapt=nadapt)
 fit <- coda.samples(jags, n.iter=samples, n.burnin=burn, thin=thin,
-                             variable.names=c('mu'))
+                             variable.names=c('mu','a','deviance','Dsum'))
 
 
 #
-## Extract fitted model and plot against raw data ... no idea how!
+## Extract fitted model
 #
 
-#plot(mcmc_samples)
-#summary(fit)
+write.csv(fit[[1]], file=paste("outputs/samples_store_iter1to",
+          samples, "_chain1.csv", sep=""), row.names=FALSE)
+write.csv(fit[[2]], file=paste("outputs/samples_store_iter1to",
+          samples, "_chain2.csv",sep=""), row.names=FALSE)
+write.csv(fit[[3]], file=paste("outputs/samples_store_iter1to",
+          samples, "_chain3.csv",sep=""), row.names=FALSE)
+write.csv(fit[[4]], file=paste("outputs/samples_store_iter1to",
+          samples, "_chain4.csv",sep=""), row.names=FALSE)
+
+# saved states
+SS1<-coef(jags,chain=1)
+save(SS1, file=paste("outputs/SavedState_iter", samples,
+     "_chain1.R", sep=""))
+SS2 <- coef(jags, chain=2)
+save(SS2, file=paste("outputs/SavedState_iter", samples,
+     "_chain2.R", sep=""))
+SS3 <- coef(jags, chain=3)
+save(SS3, file=paste("outputs/SavedState_iter", samples,
+     "_chain3.R", sep=""))
+SS4 <-coef(jags, chain=4)
+save(SS4, file=paste("outputs/SavedState_iter", samples,
+     "_chain3.R", sep=""))
+
+# Before assessing the Gelman criteria, first check that hte posterior
+# distributions are all approximately Normal.
+densplot(fit)
+
+# Rhat values for Gelman criteria
+# NOT CURRENTLY WORKING - DON'T KNOW WHY.
+z <- fit
+g <- matrix(NA, nrow=nvar(z), ncol=51)
+
+for (v in 1:nvar(z)) {
+
+  x = gelman.plot(z[,v])
+  y = x$shrink
+  g[v,] = y[,,1]
+
+}
+
+out = rbind(x$last.iter-100, g)
+write.csv(t(out), file = paste("outputs/samples_store_iter1to", samples,
+          "_Rhat.csv",sep=""), row.names=FALSE)
+
+# Once the MCMC has converged to the posterior distribution, we compute hte
+# DIC by running the MCMC 1000 more iterations using:
+DIC.calc <- dic.samples(jags, n.iter=1000, type="pD")
+DIC.calc
