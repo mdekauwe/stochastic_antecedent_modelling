@@ -57,7 +57,9 @@ model {
 
   for (i in 1:N) {
 
+    #
     ## Model likelihood
+    #
 
     # Data model (or likelihood) for the observed NPP data:
     NPP[i] <- dnorm(mu[i], tau)
@@ -76,7 +78,20 @@ model {
 
   }
 
+  #
   ## Priors
+  #
+
+  # Assign priors to the ANPP regression parameters (covariate effects):
+  for (k in 1:6) {
+
+    # Priors for non-identifiable parameters:
+    a[k] <- dnorm(0, 0.0000001)
+
+    # Compute identifiable parameters for the covariate-centered ANPP model
+    a_star[k] <- a[k] * ((1 - equals(k,2)) + equals(k,2) * sumD)
+
+  }
 
   # Prior for residual (observation) standard deviation, and compute
   # associated precision:
