@@ -1,2 +1,4 @@
 *.pdf
 *.png
+outputs/*.csv
+outputs/*.R
