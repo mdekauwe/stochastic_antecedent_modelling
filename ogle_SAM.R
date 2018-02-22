@@ -15,6 +15,7 @@
 # Date: 22.02.2018
 
 library(rjags)
+library(ggplot2)
 
 wd <- getwd()
 setwd(wd)
@@ -53,4 +54,21 @@ ppt <- df3[c("ppt1", "ppt2", "ppt3", "ppt4", "ppt5", "ppt6", "ppt7", "ppt8",
 data = list('block'=block, 'YearID'=YearID, 'Event'=Event, 'ppt'=ppt)
 
 jags <- jags.model('ogle_model.R', data=data, n.chains=4, n.adapt=100)
-jags.samples(jags, c('NPP'), 1000)
+samples <- jags.samples(jags, c('NPP', 'a', 'Event', 'mu', 'sig', 'tau',
+                                'mu_ev', 'sig_ev', 'tau_ev'), 1000)
+png('plot_1.png')
+plot(samples$NPP)
+dev.off()
+
+NPP <- samples$NPP
+
+#plot(NPP)
+
+
+
+#df <- data.frame(df2$Year, df2$NPP, NPP)
+#print(df)
+#
+#ggplot(df, aes(x, y=value, color=variable)) +
+#    geom_point(aes(y=y1, col="y1")) +
+#    geom_point(aes(y=y2, col="y2"))
