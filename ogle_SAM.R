@@ -100,6 +100,9 @@ jags <- jags.model('ogle_model.R', data=data, n.chains=nchains, n.adapt=nadapt)
 fit <- coda.samples(jags, n.iter=samples, n.burnin=burn, thin=thin,
                              variable.names=c('mu','a','deviance','Dsum'))
 
+#
+## Extract ouputs
+#
 
 for (i in 1:nchains) {
 
