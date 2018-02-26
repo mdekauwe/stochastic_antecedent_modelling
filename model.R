@@ -41,9 +41,9 @@ model {
   #for (t in 1:Nlag) {
   for (t in 1:5) {
 
-    # Compute the yearly weights:
-    yr_w[t] <- sum(weight[,t])
-    alphad[t] <- 1
+    # Compute the yearly weights - not used
+    #yr_w[t] <- sum(weight[,t])
+    #alphad[t] <- 1
 
     for (m in 1:12) {
 
@@ -92,14 +92,20 @@ model {
 
   }
 
-  # Compute the month within year weights (alpha’s = wP,m in Box 1 in main
-  # text); that is, these weights sum to 1 within each past year
+  # Compute the month within year weights ("conditional monthly weights" = wP,m
+  # in Box 1 in main text); that is, these weights sum to 1 within each past
+  # year. They indicate the relative importance of precipitation received
+  # during month m given that we're looking at past year t (where t = 1 is
+  # current year, and t = 5 is 4 years ago). That is, the alpha_weight's will
+  # sum to 1 across months WITHIN each year; they are not directly used in the
+  # model, but they may be interesting to look at. The "unconditional" monthly
+  # weights are directly used to compute the antecedent precipitation variable.
   for (m in 1:12) {
 
     #for (t in 1:Nlag) {
     for (t in 1:5) {
 
-      alpha[m,t] <- delta[m,t] / sum(delta[,t])
+      alpha_weight[m,t] <- delta[m,t] / sum(delta[,t])
 
     }
 
@@ -138,9 +144,9 @@ model {
     # of precipitation received in different size classes, where k indexes
     # the even size class (k=1 for < 5 mm; k=2 for 5-15 mm; k=3 for 15-
     # 30 mm; k=4 for >30 mm)
-    mu[i] <- ( a[1] + (a[2] * antX[YearID[i]] * INCH_TO_MM) +
-              (a[3] * Event[i,1]) + (a[4] * Event[i,2]) +
-              (a[5] * Event[i,3]) + (a[6] * Event[i,4]) )
+    mu[i] <- ( alpha[1] + (alpha[2] * antX[YearID[i]] * INCH_TO_MM) +
+              (alpha[3] * Event[i,1]) + (alpha[4] * Event[i,2]) +
+              (alpha[5] * Event[i,3]) + (alpha[6] * Event[i,4]) )
 
     # Compute first part of deviance
     D[i] <- log(2 * 3.1415926535) - log(tau) + (pow(NPP[i] - mu[i], 2) * tau)
@@ -169,7 +175,7 @@ model {
   # endogeneous (e.g. past events) covariates on mu.
   for (k in 1:6) {
 
-    a[k] ~ dnorm(0, 1E-07)
+    alpha[k] ~ dnorm(0, 1E-07)
 
   }
 
