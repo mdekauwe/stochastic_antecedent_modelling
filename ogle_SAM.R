@@ -24,6 +24,10 @@ library(cowplot)
 wd <- getwd()
 setwd(wd)
 
+N <- 52
+Nyrs <- 91
+Nblocks <- 38
+
 #
 ## Setup driving data ...
 #
@@ -66,15 +70,15 @@ ppt <- df3[c("ppt1", "ppt2", "ppt3", "ppt4", "ppt5", "ppt6", "ppt7", "ppt8",
 # creating the list of data to send to JAGS
 data = list('block'=block, 'YearID'=YearID, 'Event'=Event, 'ppt'=ppt)
 
-samples <- 10000
-burn <- samples * 0.1
+samples <- 10000 # samples to be kept after burn in
+burn <- samples * 0.1 # iterations for burn in
 nadapt <- 100  # adaptions to tune sampler
 nchains <- 4
 # thinning rate, save every 10th iteration to reduce correlation between
 # consecutive values in the chain
 thin <- 10
 jags <- jags.model('model.R', data=data, n.chains=nchains, n.adapt=nadapt)
-fit <- coda.samples(jags, n.iter=samples, n.burnin=burn, thin=thin,
+fit <- coda.samples(jags, n.iter=samples, n.burnin=burn, n.thin=thin,
                     variable.names=c('mu','alpha','deviance','Dsum'))
 
 #
