@@ -77,7 +77,7 @@ data = list('block'=block, 'YearID'=YearID, 'Event'=Event, 'ppt'=ppt,
             'Nlag'=Nlag, 'N'=N, 'Nyrs'=Nyrs, 'Nblocks'=Nblocks,
             'INCH_TO_MM'=INCH_TO_MM)
 
-samples <- 10000 # samples to be kept after burn in
+samples <- 100000 # samples to be kept after burn in
 burn <- samples * 0.1 # iterations for burn in
 nadapt <- 100  # adaptions to tune sampler
 nchains <- 4
@@ -102,7 +102,8 @@ for (i in 1:N) {
 
 }
 
-plot(df2$Year, pred, col="salmon", xlim=range(c(1940, 1990)), ylim=range(c(-6000, 200)))
+plot(df2$Year, pred, col="salmon", xlim=range(c(1940, 1990)),
+     ylim=range(c(-700, 200)))
 points(df2$Year, df2$NPP, col="royalblue")
 
 
