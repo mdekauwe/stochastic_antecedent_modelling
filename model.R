@@ -13,8 +13,6 @@
 
 model {
 
-  INCH_TO_MM <- 25.4
-
   #
   ## Compute anetcedent terms
   #

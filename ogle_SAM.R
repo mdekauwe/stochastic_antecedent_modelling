@@ -20,10 +20,6 @@
 library(rjags)
 library(ggplot2)
 library(cowplot)
-#install.packages('devtools')
-#library(devtools)
-#install_github('johnbaums/jagstools')
-library(jagstools)
 
 wd <- getwd()
 setwd(wd)
@@ -35,6 +31,7 @@ Nblocks <- 38
 # Number of past years, including the current year for which the antecedent
 # conditions are computed
 Nlag <- 5
+INCH_TO_MM <- 25.4
 
 #
 ## Setup driving data ...
@@ -77,7 +74,8 @@ ppt <- df3[c("ppt1", "ppt2", "ppt3", "ppt4", "ppt5", "ppt6", "ppt7", "ppt8",
 
 # creating the list of data to send to JAGS
 data = list('block'=block, 'YearID'=YearID, 'Event'=Event, 'ppt'=ppt,
-            'Nlag'=Nlag, 'N'=N, 'Nyrs'=Nyrs, 'Nblocks'=Nblocks)
+            'Nlag'=Nlag, 'N'=N, 'Nyrs'=Nyrs, 'Nblocks'=Nblocks,
+            'INCH_TO_MM'=INCH_TO_MM)
 
 samples <- 10000 # samples to be kept after burn in
 burn <- samples * 0.1 # iterations for burn in
@@ -93,11 +91,10 @@ fit <- coda.samples(jags, n.iter=samples, n.burnin=burn, n.thin=thin,
 #
 ## Extract ouputs
 #
-results <- jagsresults(x=fit, params=c('mu','alpha','deviance','Dsum'))
-print(results)
 
 #plot(fit, trace=FALSE, density=TRUE)
 #plot(fit, trace=TRUE, density=FALSE)
+
 
 for (i in 1:nchains) {
 
