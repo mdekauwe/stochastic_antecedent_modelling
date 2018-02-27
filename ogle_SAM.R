@@ -96,6 +96,9 @@ fit <- coda.samples(jags, n.iter=samples, n.burnin=burn, n.thin=thin,
 results <- jagsresults(x=fit, params=c('mu','alpha','deviance','Dsum'))
 print(results)
 
+#plot(fit, trace=FALSE, density=TRUE)
+#plot(fit, trace=TRUE, density=FALSE)
+
 for (i in 1:nchains) {
 
   # Extract fitted model
