@@ -92,6 +92,20 @@ fit <- coda.samples(jags, n.iter=samples, n.burnin=burn, n.thin=thin,
 ## Extract ouputs
 #
 
+pars <- summary(fit)$statistics[,1]
+
+pred <- rep(NA, N)
+offset <- 8
+for (i in 1:N) {
+
+  pred[i] <- pars[offset+i]
+
+}
+
+plot(df2$Year, pred, col="salmon", xlim=range(c(1940, 1990)), ylim=range(c(-6000, 200)))
+points(df2$Year, df2$NPP, col="royalblue")
+
+
 #plot(fit, trace=FALSE, density=TRUE)
 #plot(fit, trace=TRUE, density=FALSE)
 
