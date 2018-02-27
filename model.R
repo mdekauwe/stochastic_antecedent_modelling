@@ -14,8 +14,42 @@
 model {
 
   #
-  ## Compute anetcedent terms
+  ## Model likelihood
   #
+
+  for (i in 1:N) {
+
+    # Data model (or likelihood) for the observed NPP data:
+    NPP[i] ~ dnorm(mu[i], tau)
+
+    # Generate “replicated data” to evaluate model fit.
+    NPP_rep[i] ~ dnorm(mu[i], tau)
+
+    # Define model for latent (mean) NPP; Event[,k] represents the amount
+    # of precipitation received in different size classes, where k indexes
+    # the even size class (k=1 for < 5 mm; k=2 for 5-15 mm; k=3 for 15-
+    # 30 mm; k=4 for >30 mm)
+    mu[i] <- ( alpha[1] + (alpha[2] * antX[YearID[i]] * INCH_TO_MM) +
+              (alpha[3] * Event[i,1]) + (alpha[4] * Event[i,2]) +
+              (alpha[5] * Event[i,3]) + (alpha[6] * Event[i,4]) )
+
+    # Some of the precipitation event data are missing, so specify a simple
+    # data model for the Event data for the purpose of estimating the
+    # missing data:
+    for (k in 1:4) {
+
+      Event[i,k] ~ dnorm(mu_ev[k], tau_ev[k])
+
+    }
+
+    # Compute first part of deviance
+    D[i] <- log(2 * 3.1415926535) - log(tau) + (pow(NPP[i] - mu[i], 2) * tau)
+
+    # Part of the calculation of the posterior predictive loss.
+    # After each iteration we also compute Dsum, which is at end of this script.
+    sq_diff[i] <- pow(NPP_rep[i] - NPP[i], 2)
+
+  }
 
   # Dirichlet prior for monthly precipitation weights (due to restrictions
   # on when the built-in dirichlet distribution can be used, we are required
@@ -27,6 +61,10 @@ model {
     deltaX[j] ~ dgamma(1,1)
 
   }
+
+  #
+  ## Compute anetcedent terms
+  #
 
   for (t in 1:Nlag) {
 
@@ -107,44 +145,6 @@ model {
     }
 
     antX[i] <- sum(ant_sum1[i,])
-
-  }
-
-  #
-  ## Model likelihood
-  #
-
-  for (i in 1:N) {
-
-    # Data model (or likelihood) for the observed NPP data:
-    NPP[i] ~ dnorm(mu[i], tau)
-
-    # Generate “replicated data” to evaluate model fit.
-    NPP_rep[i] ~ dnorm(mu[i], tau)
-
-    # Define model for latent (mean) NPP; Event[,k] represents the amount
-    # of precipitation received in different size classes, where k indexes
-    # the even size class (k=1 for < 5 mm; k=2 for 5-15 mm; k=3 for 15-
-    # 30 mm; k=4 for >30 mm)
-    mu[i] <- ( alpha[1] + (alpha[2] * antX[YearID[i]] * INCH_TO_MM) +
-              (alpha[3] * Event[i,1]) + (alpha[4] * Event[i,2]) +
-              (alpha[5] * Event[i,3]) + (alpha[6] * Event[i,4]) )
-
-    # Compute first part of deviance
-    D[i] <- log(2 * 3.1415926535) - log(tau) + (pow(NPP[i] - mu[i], 2) * tau)
-
-    # Part of the calculation of the posterior predictive loss.
-    # After each iteration we also compute Dsum, which is at end of this script.
-    sq_diff[i] <- pow(NPP_rep[i] - NPP[i], 2)
-
-    # Some of the precipitation event data are missing, so specify a simple
-    # data model for the Event data for the purpose of estimating the
-    # missing data:
-    for (k in 1:4) {
-
-      Event[i,k] ~ dnorm(mu_ev[k], tau_ev[k])
-
-    }
 
   }
 
