@@ -14,13 +14,6 @@
 model {
 
   INCH_TO_MM <- 25.4
-  N <- 52
-  Nyrs <- 91
-  Nblocks <- 38
-
-  # Number of past years, including the current year for which the antecedent
-  # conditions are computed
-  Nlag <- 5
 
   #
   ## Compute anetcedent terms
@@ -31,15 +24,13 @@ model {
   # to use the relationship between the gamma distribution and the dirichlet
   # to assign the dirichlet prior. For each time block into the past, assign
   # the unnormalized weight (deltaX) a gamma(1,1) prior:
-  #for (j in 1:Nblocks) {
-  for (j in 1:38) {
+  for (j in 1:Nblocks) {
 
     deltaX[j] ~ dgamma(1,1)
 
   }
 
-  #for (t in 1:Nlag) {
-  for (t in 1:5) {
+  for (t in 1:Nlag) {
 
     # Compute the yearly weights - not used
     #yr_w[t] <- sum(weight[,t])
@@ -63,8 +54,7 @@ model {
 
       # For each time into the past, compute the weighted precipitation
       # variable.
-      #for (i in Nlag:Nyrs) {
-      for (i in 5:91) {
+      for (i in Nlag:Nyrs) {
 
         antX1[i,m,t] <- weight[m,t] * ppt[i-t+1,m]
 
@@ -76,8 +66,7 @@ model {
 
   # Compute sum of deltas (unnormalized weights), to be used to compute
   # the normalized antecedent weights:
-  #for (t in 1:Nlag) {
-  for (t in 1:5) {
+  for (t in 1:Nlag) {
 
     sumD1[t] <- sum(delta[,t])
 
@@ -85,8 +74,7 @@ model {
   sumD <- sum(sumD1[])
 
   # Compute the cumulative monthly weights:
-  #for (t in 1:(12*Nlag)) {
-  for (t in 1:(12*5)) {
+  for (t in 1:(12*Nlag)) {
 
     cum_weight[t] <- sum(weightOrdered[1:t])
 
@@ -102,8 +90,7 @@ model {
   # weights are directly used to compute the antecedent precipitation variable.
   for (m in 1:12) {
 
-    #for (t in 1:Nlag) {
-    for (t in 1:5) {
+    for (t in 1:Nlag) {
 
       alpha_weight[m,t] <- delta[m,t] / sum(delta[,t])
 
@@ -113,11 +100,9 @@ model {
 
   # Compute antecedent precipitation by summing the weighted precipitation
   # variable over months and past years ("exogenous variable"):
-  #for (i in Nlag:Nyrs) {
-  for (i in 5:91) {
+  for (i in Nlag:Nyrs) {
 
-    #for (t in 1:Nlag) {
-    for (t in 1:5) {
+    for (t in 1:Nlag) {
 
       ant_sum1[i,t] <- sum(antX1[i,,t])
 
@@ -131,8 +116,7 @@ model {
   ## Model likelihood
   #
 
-  #for (i in 1:N) {
-  for (i in 1:52) {
+  for (i in 1:N) {
 
     # Data model (or likelihood) for the observed NPP data:
     NPP[i] ~ dnorm(mu[i], tau)
