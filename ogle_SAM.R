@@ -117,12 +117,17 @@ for (i in 1:6) {
 
 }
 
+# Use the final 1000 values of the chains for posterior plots
+N <- 1000
+en <- end(chain1)[1]
+st <- en - N
+
 # Plot the posterior distribution (mean, 2.5th and 97.5th percentiles) of
-# the alpha parameters and mu values. Use the final 1000 values of the chains
-alpha_post <- rbind(chain1[4001:5000,2:7], chain2[4001:5000,2:7],
-                    chain3[4001:5000,2:7], chain4[4001:5000,2:7])
-mu_post <- rbind(chain1[4001:5000,9:60], chain2[4001:5000,9:60],
-                 chain3[4001:5000,9:60], chain4[4001:5000,9:60])
+# the alpha parameters and mu values.
+alpha_post <- rbind(chain1[st:en,2:7], chain2[st:en,2:7],
+                    chain3[st:en,2:7], chain4[st:en,2:7])
+mu_post <- rbind(chain1[st:en,9:60], chain2[st:en,9:60],
+                 chain3[st:en,9:60], chain4[st:en,9:60])
 alpha_post_mean <- apply(alpha_post, 2, mean)
 alpha_post_95CI <- apply(alpha_post, 2, quantile, probs=c(0.025, 0.975))
 
@@ -139,7 +144,7 @@ error_bar(df2$Year, mu_post_mean,upper,lower,col="salmon")
 points(df2$Year, df2$NPP, col="royalblue")
 
 
-
+# Save the chains if we are doing a longer run ...
 for (i in 1:nchains) {
 
   # Extract fitted model
