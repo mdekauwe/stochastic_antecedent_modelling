@@ -21,6 +21,13 @@ library(rjags)
 library(ggplot2)
 library(cowplot)
 
+error_bar <- function(x, y, upper, lower, length=0.1,...) {
+  if( length(x) != length(y) | length(y) !=length(lower) |
+      length(lower) != length(upper))
+    stop("vectors must be same length")
+  arrows(x,y+upper, x, y-lower, angle=90, code=3, length=length, ...)
+}
+
 wd <- getwd()
 setwd(wd)
 
@@ -78,7 +85,7 @@ data = list('block'=block, 'YearID'=YearID, 'Event'=Event, 'ppt'=ppt,
             'Nlag'=Nlag, 'N'=N, 'Nyrs'=Nyrs, 'Nblocks'=Nblocks,
             'INCH_TO_MM'=INCH_TO_MM, 'NPP'=NPP)
 
-samples <- 10000 # samples to be kept after burn in
+samples <- 5000 # samples to be kept after burn in
 burn <- samples * 0.1 # iterations for burn in
 nadapt <- 100  # adaptions to tune sampler
 nchains <- 4
@@ -93,23 +100,42 @@ fit <- coda.samples(jags, n.iter=samples, n.burnin=burn, n.thin=thin,
 ## Extract ouputs
 #
 
-pars <- summary(fit)$statistics[,1]
+# Plot chains first to check convergence.
+chain1 <- as.matrix(fit[[1]])
+chain2 <- as.matrix(fit[[2]])
+chain3 <- as.matrix(fit[[3]])
+chain4 <- as.matrix(fit[[4]])
 
-pred <- rep(NA, N)
-offset <- 8
-for (i in 1:N) {
+for (i in 1:6) {
 
-  pred[i] <- pars[offset+i]
+  plot(c(1:samples), chain1[,i+1], type='l', col='black',
+       main=paste("alpha",i), xlab="iteration no.",
+       ylab=paste("alpha",i))
+  points(c(1:samples), chain2[,i+1], type='l', col='blue')
+  points(c(1:samples), chain3[,i+1], type='l', col='green')
+  points(c(1:samples), chain4[,i+1], type='l', col='red')
 
 }
 
-plot(df2$Year, pred, col="salmon", xlim=range(c(1940, 1990)),
-     ylim=range(c(-700, 200)))
+alpha_post <- rbind(chain1[4001:5000,2:7], chain2[4001:5000,2:7],
+                    chain3[4001:5000,2:7], chain4[4001:5000,2:7])
+mu_post <- rbind(chain1[4001:5000,9:60], chain2[4001:5000,9:60],
+                 chain3[4001:5000,9:60], chain4[4001:5000,9:60])
+alpha_post_mean <- apply(alpha_post, 2, mean)
+alpha_post_95CI <- apply(alpha_post, 2, quantile, probs=c(0.025,0.975))
+
+mu_post_mean=apply(mu_post,2,mean)
+mu_post_95CI=apply(mu_post,2,quantile,probs=c(0.025,0.975))
+
+lower <- mu_post_mean - mu_post_95CI[1,]
+upper <-mu_post_95CI[2,] - mu_post_mean
+
+plot(df2$Year, mu_post_mean, col="salmon", xlim=range(c(1940, 1990)),
+     ylim=range(c(0, 200)),xlab='Year',ylab='NPP (units)',
+     main='Predicted (red) with 95% Cred. Int. vs Observed (blue) NPP')
+error_bar(df2$Year, mu_post_mean,upper,lower,col="salmon")
 points(df2$Year, df2$NPP, col="royalblue")
 
-
-#plot(fit, trace=FALSE, density=TRUE)
-#plot(fit, trace=TRUE, density=FALSE)
 
 
 for (i in 1:nchains) {
