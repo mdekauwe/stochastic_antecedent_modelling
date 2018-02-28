@@ -133,7 +133,7 @@ lower <- mu_post_mean - mu_post_95CI[1,]
 upper <-mu_post_95CI[2,] - mu_post_mean
 
 plot(df2$Year, mu_post_mean, col="salmon", xlim=range(c(1940, 1990)),
-     ylim=range(c(0, 200)),xlab='Year',ylab='NPP (units)',
+     ylim=range(c(0, 150)),xlab='Year',ylab='NPP (units)',
      main='Predicted (red) with 95% Cred. Int. vs Observed (blue) NPP')
 error_bar(df2$Year, mu_post_mean,upper,lower,col="salmon")
 points(df2$Year, df2$NPP, col="royalblue")
