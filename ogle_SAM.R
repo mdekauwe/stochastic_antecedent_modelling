@@ -117,15 +117,17 @@ for (i in 1:6) {
 
 }
 
+# Plot the posterior distribution (mean, 2.5th and 97.5th percentiles) of
+# the alpha parameters and mu values. Use the final 1000 values of the chains
 alpha_post <- rbind(chain1[4001:5000,2:7], chain2[4001:5000,2:7],
                     chain3[4001:5000,2:7], chain4[4001:5000,2:7])
 mu_post <- rbind(chain1[4001:5000,9:60], chain2[4001:5000,9:60],
                  chain3[4001:5000,9:60], chain4[4001:5000,9:60])
 alpha_post_mean <- apply(alpha_post, 2, mean)
-alpha_post_95CI <- apply(alpha_post, 2, quantile, probs=c(0.025,0.975))
+alpha_post_95CI <- apply(alpha_post, 2, quantile, probs=c(0.025, 0.975))
 
 mu_post_mean=apply(mu_post,2,mean)
-mu_post_95CI=apply(mu_post,2,quantile,probs=c(0.025,0.975))
+mu_post_95CI=apply(mu_post,2,quantile,probs=c(0.025, 0.975))
 
 lower <- mu_post_mean - mu_post_95CI[1,]
 upper <-mu_post_95CI[2,] - mu_post_mean
