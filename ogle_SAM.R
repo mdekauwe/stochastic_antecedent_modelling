@@ -131,8 +131,8 @@ mu_post <- rbind(chain1[st:en,9:60], chain2[st:en,9:60],
 alpha_post_mean <- apply(alpha_post, 2, mean)
 alpha_post_95CI <- apply(alpha_post, 2, quantile, probs=c(0.025, 0.975))
 
-mu_post_mean=apply(mu_post,2,mean)
-mu_post_95CI=apply(mu_post,2,quantile,probs=c(0.025, 0.975))
+mu_post_mean <- apply(mu_post, 2, mean)
+mu_post_95CI <- apply(mu_post, 2, quantile, probs=c(0.025, 0.975))
 
 lower <- mu_post_mean - mu_post_95CI[1,]
 upper <-mu_post_95CI[2,] - mu_post_mean
