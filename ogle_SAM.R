@@ -54,6 +54,7 @@ df2 = read.table("data/dataset2.csv", na.strings="NA", skip=1, sep=" ",
                  stringsAsFactors=FALSE, header=TRUE)
 Event <- df2[c("Event1", "Event2", "Event3", "Event4")]
 YearID <- df2$YearID
+NPP <- df2$NPP
 
 # Monthly precipitation data
 # - data were obtained for Fort Collins, Colorado, which is located about
@@ -75,9 +76,9 @@ ppt <- df3[c("ppt1", "ppt2", "ppt3", "ppt4", "ppt5", "ppt6", "ppt7", "ppt8",
 # creating the list of data to send to JAGS
 data = list('block'=block, 'YearID'=YearID, 'Event'=Event, 'ppt'=ppt,
             'Nlag'=Nlag, 'N'=N, 'Nyrs'=Nyrs, 'Nblocks'=Nblocks,
-            'INCH_TO_MM'=INCH_TO_MM)
+            'INCH_TO_MM'=INCH_TO_MM, 'NPP'=NPP)
 
-samples <- 100000 # samples to be kept after burn in
+samples <- 10000 # samples to be kept after burn in
 burn <- samples * 0.1 # iterations for burn in
 nadapt <- 100  # adaptions to tune sampler
 nchains <- 4
