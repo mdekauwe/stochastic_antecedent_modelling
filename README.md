@@ -2,8 +2,7 @@
 
 Attempt to replicate the example(s) from Ogle's et al. 2015 paper. See Box 1 in the paper and the appendix for further details.
 
-I've tried to port this to pymc3 but that isn't working. The R version seems to
-"run".
+The R version now works, so I need to back and fix the pymc3 verion.
 
 
 ## Reference
