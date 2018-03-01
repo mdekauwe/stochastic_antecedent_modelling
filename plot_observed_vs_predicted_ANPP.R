@@ -7,15 +7,6 @@
 # Date: 01.03.2018
 
 library(ggplot2)
-library(cowplot)
-
-error_bar <- function(x, y, upper, lower, length=0.1,...) {
-  if( length(x) != length(y) | length(y) !=length(lower) |
-      length(lower) != length(upper))
-    stop("vectors must be same length")
-  arrows(x,y+upper, x, y-lower, angle=90, code=3, length=length, ...)
-}
-
 
 wd <- getwd()
 setwd(wd)
@@ -59,12 +50,18 @@ df2 = read.table("data/dataset2.csv", na.strings="NA", skip=1, sep=" ",
 YearID <- df2$YearID
 NPP <- df2$NPP
 
-png(filename="plots/observed_ANPP_vs_predicted.png")
 
-plot(df2$Year, mu_post_mean, col="salmon", xlim=range(c(1940, 1990)),
-     ylim=range(c(0, 150)), xlab='Year', ylab='NPP (units)',
-     main='Predicted (red) with 95% Cred. Int. vs Observed (blue) NPP')
-error_bar(df2$Year, mu_post_mean, upper,lower, col="salmon")
-points(df2$Year, df2$NPP, col="royalblue")
+df <- data.frame(df2$Year, df2$NPP, mu_post_mean)
+colnames(df) <- c("Year","NPP_obs", "NPP_pred")
 
-dev.off()
+ggplot(data=df, aes(x=Year, y=NPP_pred)) +
+  geom_point(color="black") +
+  geom_errorbar(aes(ymin=NPP_pred-lower, ymax=NPP_pred+upper),
+                color="black") +
+  geom_point(aes(x=Year, y=NPP_obs), colour="salmon") +
+  xlab("Year") +
+  ylab("NPP") +
+  theme(aspect.ratio=1/1.618) +
+  theme_classic()
+
+ggsave("plots/observed_ANPP_vs_predicted.png", width=6, height=4)
