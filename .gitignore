@@ -2,3 +2,4 @@
 *.png
 outputs/*.csv
 outputs/*.bin
+plots/*
