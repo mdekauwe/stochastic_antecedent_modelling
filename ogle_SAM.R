@@ -96,60 +96,6 @@ fit <- coda.samples(jags, n.iter=samples, n.burnin=burn, thin=thin,
 #
 ## Extract ouputs
 #
-#hat <- summary(fit$mu, quantile, c(.025,.5,.975)$stat)
-#summary(fit)$stat
-
-#df = as.data.frame(rbind(fit[[1]], fit[[2]], fit[[3]], fit[[4]]))
-
-# Plot chains first to check convergence.
-chain1 <- as.matrix(fit[[1]])
-chain2 <- as.matrix(fit[[2]])
-chain3 <- as.matrix(fit[[3]])
-chain4 <- as.matrix(fit[[4]])
-
-for (i in 1:6) {
-
-  plot(c(1:samples), chain1[,i+1], type='l', col='black',
-       main=paste("alpha",i), xlab="iteration no.",
-       ylab=paste("alpha",i))
-  points(c(1:samples), chain2[,i+1], type='l', col='blue')
-  points(c(1:samples), chain3[,i+1], type='l', col='green')
-  points(c(1:samples), chain4[,i+1], type='l', col='red')
-
-}
-
-# Use the final N values of the chains for posterior plots
-N <- samples / thin
-en <- end(chain1)[1]
-st <- en - N
-
-#
-## Plot the posterior distribution (mean, 2.5th and 97.5th percentiles, i.e. the
-# 95% credible interval) of the alpha parameters and mu values.
-
-# To use the MCMC samples for prediction, we combine the 4 chains into one.
-alpha_post <- rbind(chain1[st:en,2:7], chain2[st:en,2:7],
-                    chain3[st:en,2:7], chain4[st:en,2:7])
-
-# To use the MCMC samples for prediction, we combine the 4 chains into one.
-mu_post <- rbind(chain1[st:en,9:60], chain2[st:en,9:60],
-                 chain3[st:en,9:60], chain4[st:en,9:60])
-
-alpha_post_mean <- apply(alpha_post, 2, mean)
-alpha_post_95CI <- apply(alpha_post, 2, quantile, probs=c(0.025, 0.975))
-
-mu_post_mean <- apply(mu_post, 2, mean)
-mu_post_95CI <- apply(mu_post, 2, quantile, probs=c(0.025, 0.975))
-
-lower <- mu_post_mean - mu_post_95CI[1,]
-upper <-mu_post_95CI[2,] - mu_post_mean
-
-plot(df2$Year, mu_post_mean, col="salmon", xlim=range(c(1940, 1990)),
-     ylim=range(c(0, 150)),xlab='Year',ylab='NPP (units)',
-     main='Predicted (red) with 95% Cred. Int. vs Observed (blue) NPP')
-error_bar(df2$Year, mu_post_mean,upper,lower,col="salmon")
-points(df2$Year, df2$NPP, col="royalblue")
-
 
 # Save the chains if we are doing a longer run ...
 for (i in 1:nchains) {
@@ -169,7 +115,7 @@ for (i in 1:nchains) {
 ## Assess convergence (Gelman and Rubin diagnostic)
 #
 
-# Before assessing the Gelman criteria, first check that hte posterior
+# Before assessing the Gelman criteria, first check that the posterior
 # distributions are all approximately Normal.
 densplot(fit)
 
