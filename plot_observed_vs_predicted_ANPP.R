@@ -20,18 +20,25 @@ error_bar <- function(x, y, upper, lower, length=0.1,...) {
 wd <- getwd()
 setwd(wd)
 
-chain1 <- read.csv(file=paste("outputs/chain_iter_1_to_", chain,
-                     "_chain1.csv", sep=""), header=TRUE)
-chain2 <- read.csv(file=paste("outputs/chain_iter_1_to_", chain,
-                     "_chain2.csv", sep=""), header=TRUE)
-chain3 <- read.csv(file=paste("outputs/chain_iter_1_to_", chain,
-                     "_chain3.csv", sep=""), header=TRUE)
-chain4 <- read.csv(file=paste("outputs/chain_iter_1_to_", chain,
-                     "_chain4.csv", sep=""), header=TRUE)
-
 samples <- 50000 # samples to be kept after burn in
 thin <- 10
 N <- samples / thin
+
+
+chain1 <- read.csv(file=paste("outputs/chain_iter_1_to_", samples,
+                     "_chain1.csv", sep=""), header=TRUE)
+chain2 <- read.csv(file=paste("outputs/chain_iter_1_to_", samples,
+                     "_chain2.csv", sep=""), header=TRUE)
+chain3 <- read.csv(file=paste("outputs/chain_iter_1_to_", samples,
+                     "_chain3.csv", sep=""), header=TRUE)
+chain4 <- read.csv(file=paste("outputs/chain_iter_1_to_", samples,
+                     "_chain4.csv", sep=""), header=TRUE)
+
+chain1 <- as.matrix(chain1)
+chain2 <- as.matrix(chain2)
+chain3 <- as.matrix(chain3)
+chain4 <- as.matrix(chain4)
+
 en <- end(chain1)[1]
 st <- en - N
 
