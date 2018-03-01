@@ -93,7 +93,7 @@ nchains <- 4
 # consecutive values in the chain
 thin <- 10
 jags <- jags.model('model.R', data=data, n.chains=nchains, n.adapt=nadapt)
-fit <- coda.samples(jags, n.iter=samples, n.burnin=burn, n.thin=thin,
+fit <- coda.samples(jags, n.iter=samples, n.burnin=burn, thin=thin,
                     variable.names=c('mu','alpha','deviance','Dsum'))
 
 #
