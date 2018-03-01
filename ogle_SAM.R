@@ -8,6 +8,12 @@
 # This is the wrapper function: sets things up, calls the model script and
 # does something with the result
 #
+# NB. This runs faster if we don't monitor mu, but instead reconstruct it
+#     from the fitted alpha terms by sampling the posterior. That is obviously
+#     a bit of a faff so leaving that for now ... but it is pretty slow once
+#     we increase Nsamples ... so ...
+#
+#
 # Reference
 # ---------
 # * Ogle et al. (2015) Quantifying ecological memory in plant and ecosystem
@@ -18,8 +24,6 @@
 # Date: 22.02.2018
 
 library(rjags)
-library(ggplot2)
-library(cowplot)
 
 error_bar <- function(x, y, upper, lower, length=0.1,...) {
   if( length(x) != length(y) | length(y) !=length(lower) |
@@ -85,7 +89,7 @@ data = list('block'=block, 'YearID'=YearID, 'Event'=Event, 'ppt'=ppt,
             'Nlag'=Nlag, 'N'=N, 'Nyrs'=Nyrs, 'Nblocks'=Nblocks,
             'INCH_TO_MM'=INCH_TO_MM, 'NPP'=NPP)
 
-samples <- 5000 # samples to be kept after burn in
+samples <- 50000 # samples to be kept after burn in
 burn <- samples * 0.1 # iterations for burn in
 nadapt <- 100  # adaptions to tune sampler
 nchains <- 4
@@ -99,6 +103,10 @@ fit <- coda.samples(jags, n.iter=samples, n.burnin=burn, thin=thin,
 #
 ## Extract ouputs
 #
+#hat <- summary(fit$mu, quantile, c(.025,.5,.975)$stat)
+#summary(fit)$stat
+
+#df = as.data.frame(rbind(fit[[1]], fit[[2]], fit[[3]], fit[[4]]))
 
 # Plot chains first to check convergence.
 chain1 <- as.matrix(fit[[1]])
@@ -117,17 +125,23 @@ for (i in 1:6) {
 
 }
 
-# Use the final 1000 values of the chains for posterior plots
-N <- 1000
+# Use the final N values of the chains for posterior plots
+N <- samples / thin
 en <- end(chain1)[1]
 st <- en - N
 
-# Plot the posterior distribution (mean, 2.5th and 97.5th percentiles) of
-# the alpha parameters and mu values.
+#
+## Plot the posterior distribution (mean, 2.5th and 97.5th percentiles, i.e. the
+# 95% credible interval) of the alpha parameters and mu values.
+
+# To use the MCMC samples for prediction, we combine the 4 chains into one.
 alpha_post <- rbind(chain1[st:en,2:7], chain2[st:en,2:7],
                     chain3[st:en,2:7], chain4[st:en,2:7])
+
+# To use the MCMC samples for prediction, we combine the 4 chains into one.
 mu_post <- rbind(chain1[st:en,9:60], chain2[st:en,9:60],
                  chain3[st:en,9:60], chain4[st:en,9:60])
+
 alpha_post_mean <- apply(alpha_post, 2, mean)
 alpha_post_95CI <- apply(alpha_post, 2, quantile, probs=c(0.025, 0.975))
 
@@ -158,11 +172,16 @@ for (i in 1:nchains) {
 
 }
 
+#
+## Assess convergence (Gelman and Rubin diagnostic)
+#
+
 # Before assessing the Gelman criteria, first check that hte posterior
 # distributions are all approximately Normal.
 densplot(fit)
 
-# Rhat values for Gelman criteria
+# Rhat values for Gelman-Rubin convergence diagnostic
+# - the ratio of variance within chains to that among chains
 # NOT CURRENTLY WORKING - DON'T KNOW WHY.
 g <- matrix(NA, nrow=nvar(fit), ncol=51)
 
